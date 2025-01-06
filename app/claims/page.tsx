@@ -1,4 +1,5 @@
 import { LoadingSkeleton } from '@/app/claims/LoadingSkeleton';
+import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { FetchError } from '@/components/FetchError';
 import { Tag } from '@/components/Tag';
@@ -13,14 +14,23 @@ const Claims = async () => {
         return <FetchError/>
     }
 
+    if (claims.length === 0) return (
+        <div className="flex flex-col items-center justify-center mt-12">
+            <h1 className="text-2xl">No claims yet</h1>
+            <p className="text-gray-500">
+                Create a new claim to get started
+            </p>
+        </div>
+    )
+
     return <div>
         {claims?.map((claim, index) => (
             <Link href={`/claims/${claim._id}`} key={index}>
                 <Card title={claim.title}>
                     <section className="mt-4">
-                        {formatDistanceToNow(claim.createdAt, {
-                            addSuffix: true
-                        })}
+                        Created {formatDistanceToNow(claim.createdAt, {
+                        addSuffix: true
+                    })}
 
                     </section>
                     <section className="flex flex-wrap mt-4">
@@ -37,7 +47,15 @@ const Claims = async () => {
 const Page = async () => {
     return (
         <div className="flex-auto">
-            <h1>Claims</h1>
+            <section className="flex flex-row justify-between align-middle">
+                <h1>Claims</h1>
+                <Link href="/claims/new">
+                    <Button className="mt-0">
+                        New Claim
+                    </Button>
+                </Link>
+            </section>
+
             <Suspense fallback={<LoadingSkeleton/>}>
                 <Claims/>
             </Suspense>

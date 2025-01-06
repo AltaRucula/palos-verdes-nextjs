@@ -6,7 +6,7 @@ import { Card } from '@/components/Card';
 import { TextArea } from '@/components/TextArea';
 import { Message } from '@/types/claim';
 import { formatDistanceToNow } from 'date-fns';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState } from 'react';
 
 type Props = {
     claimId: string;
@@ -15,28 +15,24 @@ type Props = {
 
 export const Messages = (props: Props) => {
     const [state, action, isPending] = useActionState(submitMessage, {
-        success: false
-    });
-    const [messages, setMessages] = useState(props.messages);
-
-    useEffect(() => {
-        if (state.payload) {
-            setMessages(state.payload);
+        success: false,
+        payload: {
+            claimId: props.claimId,
+            messages: props.messages
         }
-    }, [
-        state.payload
-    ])
+    });
 
     return (
         <Card>
             <form action={action} className="flex flex-col">
-                <input name="claimId" type="hidden" value={props.claimId}/>
                 <TextArea name="message" placeholder="Type your message"/>
-                <Button disabled={isPending} type="submit">Send</Button>
+                <Button disabled={isPending} type="submit">{isPending ? 'Working' : 'Send'}</Button>
             </form>
 
             <div className="mt-8">
-                {messages.map((message, index) => (
+                {state.payload?.messages?.length === 0 && <p className="mt-12">No messages yet</p>}
+
+                {state.payload?.messages?.map((message, index) => (
                     <div
                         className="border-t border-dotted border-emerald-600 py-4"
                         key={index}>
@@ -46,6 +42,8 @@ export const Messages = (props: Props) => {
                         })}</div>
                     </div>
                 ))}
+
+                {state.errors && <p className="text-red-500">{state.errors}</p>}
             </div>
         </Card>
     )

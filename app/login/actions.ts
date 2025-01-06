@@ -1,16 +1,15 @@
 "use server";
 
-import { ActionState } from '@/actions/actionState';
 import { createSession } from '@/lib/session';
 import { findUserByEmail } from '@/lib/users';
-import { NewUser } from '@/types/user';
+import { ActionState } from '@/types/actionState';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 
 export const login = async (
-    actionState: ActionState<NewUser>,
+    actionState: ActionState<null>,
     formData: FormData
-): Promise<ActionState<NewUser>> => {
+): Promise<ActionState<null>> => {
 
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -29,11 +28,6 @@ export const login = async (
             success: false
         }
     }
-
-    console.info({
-        email,
-        password
-    })
 
     // 2. Find user
     const user = await findUserByEmail(email);

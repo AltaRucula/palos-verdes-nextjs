@@ -1,17 +1,16 @@
 "use server";
 
-import { ActionState } from '@/actions/actionState';
 import { PASSWORD_SALT_OR_ROUND } from '@/lib/env';
 import { createSession } from '@/lib/session';
 import { createUser } from '@/lib/users';
-import { NewUser } from '@/types/user';
+import { ActionState } from '@/types/actionState';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 
 export const signup = async (
-    actionState: ActionState<NewUser>,
+    actionState: ActionState<null>,
     formData: FormData
-): Promise<ActionState<NewUser>> => {
+): Promise<ActionState<null>> => {
 
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -38,13 +37,6 @@ export const signup = async (
         email,
         password: hashedPassword
     });
-
-    console.info('signup', {
-        user,
-        email,
-        password,
-        hashedPassword
-    })
 
     if (!user) {
         return {

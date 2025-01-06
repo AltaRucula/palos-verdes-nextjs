@@ -23,7 +23,6 @@ export const GET = async (request: NextRequest, {params}: Props) => {
 export const PUT = async ({body}: NextRequest, {params}: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const {claimId} = await params;
-    console.dir(body);
 
     const claim = await updateClaim(claimId, body as unknown as Claim);
     if (claim) {

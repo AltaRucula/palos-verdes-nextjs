@@ -9,8 +9,8 @@ import { Suspense } from 'react';
 
 const Profile = async () => {
     let user: User | null = null;
-    const session = await getSession();
-    const userId: string = session?.userId as string;
+    const currentSession = await getSession();
+    const userId: string = currentSession?.userId as string;
     if (userId) {
         user = await findUser(userId);
     }

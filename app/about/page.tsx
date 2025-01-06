@@ -18,7 +18,8 @@ const Page = () => {
 
                 <p className="my-4">
                     This application is built with React Native and Expo. For any questions
-                    or suggestions, please contact me at {' '} <a href="mailto:zfngomez@gmail.com">zfngomez@gmail.com</a>
+                    or suggestions, please contact me at {' '} <a className="underline underline-offset-4 decoration-dotted"
+                                                                  href="mailto:zfngomez@gmail.com">zfngomez@gmail.com</a>
                 </p>
             </Card>
         </div>

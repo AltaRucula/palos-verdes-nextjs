@@ -1,14 +1,13 @@
 "use server";
 
-import { ActionState } from '@/actions/actionState';
 import { deleteSession } from '@/lib/session';
-import { User } from '@/types/user';
+import { ActionState } from '@/types/actionState';
 import { redirect } from 'next/navigation';
 
 export const logout = async (
-    actionState: ActionState<User>,
+    actionState: ActionState<null>,
     formData: FormData
-): Promise<ActionState<User>> => {
+): Promise<ActionState<null>> => {
     await deleteSession();
 
     return redirect('/');

@@ -6,11 +6,18 @@ export type Message = {
 
 export type Claim = {
     _id: string;
-    author: string;
     createdAt: Date;
+    content: string;
+    messages: Message[]
+    tags: string[];
+    title: string;
+    userId: string;
+    votes: number;
+}
+
+export type NewClaim = {
     content: string;
     tags: string[];
     title: string;
-    votes: number;
-    messages: Message[]
+    userId: string;
 }

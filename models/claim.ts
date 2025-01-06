@@ -6,10 +6,6 @@ import { model, models, Schema } from 'mongoose';
 // Find a fix by checking first if the model is already present in the mongoose models, and otherwise creating it.
 // https://stackoverflow.com/questions/19051041/cannot-overwrite-model-once-compiled-mongoose
 export const ClaimModel = models.Claim || model<Claim>('Claim', new Schema<Claim>({
-    author: {
-        type: String,
-        required: true
-    },
     createdAt: {
         type: Date,
         default: () => Date.now(),
@@ -18,15 +14,6 @@ export const ClaimModel = models.Claim || model<Claim>('Claim', new Schema<Claim
     content: {
         type: String,
         required: true
-    },
-    tags: [String],
-    title: {
-        type: String,
-        required: true
-    },
-    votes: {
-        type: Number,
-        required: false
     },
     messages: [{
         content: {
@@ -38,5 +25,18 @@ export const ClaimModel = models.Claim || model<Claim>('Claim', new Schema<Claim
             default: () => Date.now(),
             immutable: true
         }
-    }]
+    }],
+    tags: [String],
+    title: {
+        type: String,
+        required: true
+    },
+    userId: {
+        type: String,
+        required: true
+    },
+    votes: {
+        type: Number,
+        required: false
+    }
 }));

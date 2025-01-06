@@ -1,5 +1,3 @@
-"use server"
-
 import { LoginForm } from '@/app/login/LoginForm';
 import { Card } from '@/components/Card';
 

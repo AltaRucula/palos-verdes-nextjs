@@ -12,8 +12,6 @@ export const GET = async () => {
 }
 
 export const POST = async ({body}: NextRequest) => {
-    console.dir(body);
-
     const claim = await createClaim(body as unknown as Claim);
     if (claim) {
         return NextResponse.json(claim);

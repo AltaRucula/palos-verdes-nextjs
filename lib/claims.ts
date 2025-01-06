@@ -1,6 +1,6 @@
 import { dbConnect } from '@/lib/mongoose';
 import { ClaimModel } from '@/models/claim';
-import { Claim, Message } from '@/types/claim';
+import { Claim, Message, NewClaim } from '@/types/claim';
 
 // Mongoose does not support nested fields sorting, so we need to sort the messages array after receiving the data from DB
 const sortMessagesByCreatedAt = (a: Message, b: Message) => b.createdAt.getTime() - a.createdAt.getTime();
@@ -37,7 +37,7 @@ export const findClaim = async (id: string): Promise<Claim | null> => {
     }
 }
 
-export const createClaim = async (claim: Claim): Promise<Claim | null> => {
+export const createClaim = async (claim: NewClaim): Promise<Claim | null> => {
     try {
         await dbConnect();
         const newClaim = new ClaimModel(claim);

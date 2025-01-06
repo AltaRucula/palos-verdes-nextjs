@@ -1,32 +1,46 @@
 'use server';
 
-import { ActionState } from '@/actions/actionState';
 import { addMessage } from '@/lib/claims';
+import { ActionState } from '@/types/actionState';
 import { Message } from '@/types/claim';
 
+type SubmitMessageStatePayload = {
+    claimId: string;
+    messages: Message[];
+}
+
 export const submitMessage = async (
-    actionState: ActionState<Message[]>,
+    actionState: ActionState<SubmitMessageStatePayload>,
     formData: FormData
-): Promise<ActionState<Message[]>> => {
-    const claimId = formData.get('claimId') as string;
-    if (!claimId) {
+): Promise<ActionState<SubmitMessageStatePayload>> => {
+    if (!actionState.payload) {
         return {
-            errors: 'Claim ID is required',
+            errors: 'Invalid payload',
             success: false
         }
     }
 
-    const updatedClaim = await addMessage(claimId, {
-        content: formData.get('message') as string
-    });
+    const message = formData.get('message') as string;
+    if (!message) {
+        return {
+            errors: 'Message is required',
+            success: false
+        }
+    }
 
+    const updatedClaim = await addMessage(actionState.payload.claimId, {
+        content: message
+    });
     if (!updatedClaim) return {
         errors: 'Error adding message to the claim',
         success: false
     }
 
     return {
-        payload: JSON.parse(JSON.stringify(updatedClaim.messages)),
+        payload: {
+            ...actionState.payload,
+            messages: JSON.parse(JSON.stringify(updatedClaim.messages))
+        },
         success: true
     }
 }
