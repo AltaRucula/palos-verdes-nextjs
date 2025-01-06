@@ -5,7 +5,8 @@ const links = [
     {href: '/', label: 'Home', key: 'home'},
     {href: '/claims', label: 'Claims', key: 'claims'},
     {href: '/settings', label: 'Settings', key: 'settings'},
-    {href: '/about', label: 'About', key: 'about'}
+    {href: '/about', label: 'About', key: 'about'},
+    {href: '/profile', label: 'Profile', key: 'profile'}
 ];
 
 export const Navbar: React.FC = () => {
