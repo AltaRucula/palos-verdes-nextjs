@@ -22,7 +22,7 @@ export const NewForm = () => {
             <section className="flex flex-wrap mt-4">
                 <input name="tags" type="hidden" value={selectedTags}/>
                 {TAGS.map((tag, index) => (
-                    <Tag className={`cursor-pointer ${selectedTags.includes(tag) ? 'bg-emerald-900 font-bold' : ''}`}
+                    <Tag className={`cursor-pointer ${selectedTags.includes(tag) ? 'bg-primary-900 font-bold' : ''}`}
                          key={index}
                          onClick={() => {
                              if (selectedTags.includes(tag)) {

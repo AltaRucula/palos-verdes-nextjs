@@ -24,7 +24,7 @@ const Claim = async ({claimId}: { claimId: string }) => {
                 <section className="mt-4 ">
                     {claim.content}
                 </section>
-                <section className="mt-4 text-emerald-700">
+                <section className="mt-4 text-primary-700">
                     Created{' '}
                     {formatDistanceToNow(claim.createdAt, {
                         addSuffix: true
@@ -32,7 +32,7 @@ const Claim = async ({claimId}: { claimId: string }) => {
                     by {claim.userId}
 
                 </section>
-                <section className="mt-4 text-emerald-700">
+                <section className="mt-4 text-primary-700">
                     {`Votes: ${claim.votes ?? 0}`}
                 </section>
                 <section className="flex flex-wrap mt-4">

@@ -34,10 +34,10 @@ export const Messages = (props: Props) => {
 
                 {state.payload?.messages?.map((message, index) => (
                     <div
-                        className="border-t border-dotted border-emerald-600 py-4"
+                        className="border-t border-dotted border-primary-600 py-4"
                         key={index}>
                         {message.content}
-                        <div className="text-gray-400">{formatDistanceToNow(message.createdAt, {
+                        <div className="text-secondary-400">{formatDistanceToNow(message.createdAt, {
                             addSuffix: true
                         })}</div>
                     </div>
