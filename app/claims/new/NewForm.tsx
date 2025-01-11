@@ -16,15 +16,19 @@ export const NewForm = () => {
 
     return (
         <form action={action} className="flex flex-col">
-            <Input name="title" placeholder="Title"/>
-            <TextArea name="content" placeholder="Type your message"/>
+            <Input disabled={isPending} name="title" placeholder="Title"/>
+            <TextArea disabled={isPending} name="content" placeholder="Type your message"/>
 
             <section className="flex flex-wrap mt-4">
                 <input name="tags" type="hidden" value={selectedTags}/>
                 {TAGS.map((tag, index) => (
-                    <Tag className={`cursor-pointer ${selectedTags.includes(tag) ? 'bg-primary-900 font-bold' : ''}`}
+                    <Tag className={`cursor-pointer ${selectedTags.includes(tag) ? 'bg-primary-600' : 'bg-primary-900'}`}
                          key={index}
                          onClick={() => {
+                             if (isPending) {
+                                 return;
+                             }
+
                              if (selectedTags.includes(tag)) {
                                  setSelectedTags((prevState => prevState.filter(t => t !== tag)));
                                  return;

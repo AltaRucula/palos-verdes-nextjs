@@ -2,7 +2,7 @@ import { DeleteClaim } from '@/app/claims/[claimId]/DeleteClaim';
 import { LoadingSkeleton } from '@/app/claims/[claimId]/LoadingSkeleton';
 import { Messages } from '@/app/claims/[claimId]/Messages';
 import { Card } from '@/components/Card';
-import { FetchError } from '@/components/FetchError';
+import { Error } from '@/components/Error';
 import { Tag } from '@/components/Tag';
 import { findClaim } from '@/lib/claims';
 import { formatDistanceToNow } from 'date-fns';
@@ -11,7 +11,7 @@ import { Suspense } from 'react';
 const Claim = async ({claimId}: { claimId: string }) => {
     const claim = await findClaim(claimId);
     if (!claim) {
-        return <FetchError/>
+        return <Error/>
     }
 
     return (

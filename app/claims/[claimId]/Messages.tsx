@@ -25,7 +25,7 @@ export const Messages = (props: Props) => {
     return (
         <Card>
             <form action={action} className="flex flex-col">
-                <TextArea name="message" placeholder="Type your message"/>
+                <TextArea disabled={isPending} name="message" placeholder="Type your message"/>
                 <Button disabled={isPending} type="submit">{isPending ? 'Working' : 'Send'}</Button>
             </form>
 
