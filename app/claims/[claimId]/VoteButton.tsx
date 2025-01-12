@@ -2,19 +2,19 @@
 
 import { voteClaim } from '@/app/claims/[claimId]/actions';
 import { Button } from '@/components/Button';
-import { useActionState } from 'react';
+import React, { useActionState } from 'react';
 
 type Props = {
     claimId: string;
     isClaimAlreadyVotedByUser?: boolean;
 }
 
-export const VoteButton = (props: Props) => {
+export const VoteButton: React.FC<Props> = ({claimId, isClaimAlreadyVotedByUser}) => {
     const [state, action, isPending] = useActionState(voteClaim, {
         success: false,
         payload: {
-            claimId: props.claimId,
-            isClaimAlreadyVotedByUser: props.isClaimAlreadyVotedByUser ?? false
+            claimId: claimId,
+            isClaimAlreadyVotedByUser: isClaimAlreadyVotedByUser ?? false
         }
     });
 

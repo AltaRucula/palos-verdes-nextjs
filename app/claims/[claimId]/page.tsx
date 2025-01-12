@@ -8,9 +8,13 @@ import { Tag } from '@/components/Tag';
 import { findClaim } from '@/lib/claims';
 import { getSession } from '@/lib/session';
 import { formatDistanceToNow } from 'date-fns';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 
-const Claim = async ({claimId}: { claimId: string }) => {
+type ClaimProps = {
+    claimId: string;
+}
+
+const Claim: React.FC<ClaimProps> = async ({claimId}) => {
     const claim = await findClaim(claimId);
     if (!claim) {
         return <Error/>
@@ -62,7 +66,7 @@ type Props = {
     }>;
 }
 
-const Page = async ({params}: Props) => {
+const Page: React.FC<Props> = async ({params}) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const {claimId} = await params;
 

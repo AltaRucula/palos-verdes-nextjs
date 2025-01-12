@@ -6,19 +6,19 @@ import { Card } from '@/components/Card';
 import { TextArea } from '@/components/TextArea';
 import { Message } from '@/types/claim';
 import { formatDistanceToNow } from 'date-fns';
-import { useActionState } from 'react';
+import React, { useActionState } from 'react';
 
 type Props = {
     claimId: string;
     messages: Message[];
 }
 
-export const Messages = (props: Props) => {
+export const Messages: React.FC<Props> = ({claimId, messages}) => {
     const [state, action, isPending] = useActionState(submitMessage, {
         success: false,
         payload: {
-            claimId: props.claimId,
-            messages: props.messages
+            claimId: claimId,
+            messages: messages
         }
     });
 
