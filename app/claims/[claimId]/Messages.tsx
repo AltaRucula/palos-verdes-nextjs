@@ -37,9 +37,9 @@ export const Messages = (props: Props) => {
                         className="border-t border-dotted border-primary-600 py-4"
                         key={index}>
                         {message.content}
-                        <div className="text-secondary-400">{formatDistanceToNow(message.createdAt, {
-                            addSuffix: true
-                        })}</div>
+                        <div className="text-secondary-400 text-xs">
+                            {`Created ${formatDistanceToNow(message.createdAt, {addSuffix: true})} by ${message.author.firstName}`}
+                        </div>
                     </div>
                 ))}
 

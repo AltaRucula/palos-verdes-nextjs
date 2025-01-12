@@ -24,6 +24,11 @@ export const ClaimModel = models.Claim || model<Claim>('Claim', new Schema<Claim
             type: Date,
             default: () => Date.now(),
             immutable: true
+        },
+        author: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
         }
     }],
     tags: [String],
@@ -31,12 +36,21 @@ export const ClaimModel = models.Claim || model<Claim>('Claim', new Schema<Claim
         type: String,
         required: true
     },
-    userId: {
-        type: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
-    votes: {
-        type: Number,
-        required: false
-    }
+    votes: [{
+        createdAt: {
+            type: Date,
+            default: () => Date.now(),
+            immutable: true
+        },
+        author: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        }
+    }]
 }));

@@ -15,6 +15,14 @@ export const UserModel = models.User || model<User>('User', new Schema<User>({
         type: String,
         required: true
     },
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
     password: {
         type: String,
         required: true

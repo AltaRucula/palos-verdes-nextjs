@@ -12,10 +12,26 @@ export const signup = async (
     formData: FormData
 ): Promise<ActionState<null>> => {
 
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
     // 1. Validate fields
+    if (!firstName) {
+        return {
+            errors: 'First name is required',
+            success: false
+        }
+    }
+
+    if (!lastName) {
+        return {
+            errors: 'Last name is required',
+            success: false
+        }
+    }
+
     if (!email) {
         return {
             errors: 'Email is required',
@@ -35,6 +51,8 @@ export const signup = async (
 
     const user = await createUser({
         email,
+        firstName,
+        lastName,
         password: hashedPassword
     });
 
@@ -46,7 +64,7 @@ export const signup = async (
     }
 
     // 3. Create session
-    await createSession(user._id);
+    await createSession(user.id);
 
     return redirect('/');
 }

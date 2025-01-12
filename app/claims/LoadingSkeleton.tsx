@@ -14,13 +14,13 @@ export const LoadingSkeleton = () => {
                     </section>
                     <section className="flex mt-8 ">
                         <Tag>
-                            <div className="bg-primary-100 rounded-full h-4 w-20"/>
+                            <div className="rounded-full h-3 w-20"/>
                         </Tag>
                         <Tag>
-                            <div className="bg-primary-100 rounded-full h-4 w-12"/>
+                            <div className="rounded-full h-3 w-12"/>
                         </Tag>
                         <Tag>
-                            <div className="bg-primary-100 rounded-full h-4 w-36"/>
+                            <div className="rounded-full h-3 w-36"/>
                         </Tag>
                     </section>
                 </Card>

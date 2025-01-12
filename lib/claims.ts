@@ -1,6 +1,6 @@
 import { dbConnect } from '@/lib/mongoose';
 import { ClaimModel } from '@/models/claim';
-import { Claim, Message, NewClaim } from '@/types/claim';
+import { Claim, Message, NewClaim, NewMessage, NewVote } from '@/types/claim';
 
 // Mongoose does not support nested fields sorting, so we need to sort the messages array after receiving the data from DB
 const sortMessagesByCreatedAt = (a: Message, b: Message) => b.createdAt.getTime() - a.createdAt.getTime();
@@ -26,10 +26,27 @@ export const findClaims = async (): Promise<Claim[] | null> => {
 export const findClaim = async (id: string): Promise<Claim | null> => {
     try {
         await dbConnect();
-        const claim = await ClaimModel.findById<Claim>(id);
+        const claim = await ClaimModel.findById<Claim>(id)
+            .populate('author', 'firstName')
+            .populate({
+                path: 'messages',
+                populate: {
+                    path: 'author',
+                    select: 'firstName'
+                }
+            })
+            .populate({
+                path: 'votes',
+                populate: {
+                    path: 'author',
+                    select: '_id'
+                }
+            });
+
         if (claim) {
             claim.messages.sort(sortMessagesByCreatedAt);
         }
+
         return claim;
     } catch (error) {
         console.error('Error trying to get claim', error);
@@ -68,7 +85,7 @@ export const deleteClaim = async (id: string): Promise<Claim | null> => {
     }
 }
 
-export const addMessage = async (claimId: string, message: Partial<Message>): Promise<Claim | null> => {
+export const addMessage = async (claimId: string, message: NewMessage): Promise<Claim | null> => {
     try {
         await dbConnect();
         const claim = await ClaimModel.findByIdAndUpdate<Claim>(claimId, {
@@ -82,6 +99,22 @@ export const addMessage = async (claimId: string, message: Partial<Message>): Pr
             claim.messages.sort(sortMessagesByCreatedAt);
         }
         return claim;
+    } catch (error) {
+        console.error('Error trying to update claim', error);
+        return null;
+    }
+}
+
+export const addVote = async (claimId: string, vote: NewVote): Promise<Claim | null> => {
+    try {
+        await dbConnect();
+        return await ClaimModel.findByIdAndUpdate<Claim>(claimId, {
+            $push: {
+                votes: vote
+            }
+        }, {
+            new: true
+        });
     } catch (error) {
         console.error('Error trying to update claim', error);
         return null;

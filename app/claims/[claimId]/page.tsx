@@ -1,10 +1,12 @@
 import { DeleteClaim } from '@/app/claims/[claimId]/DeleteClaim';
 import { LoadingSkeleton } from '@/app/claims/[claimId]/LoadingSkeleton';
 import { Messages } from '@/app/claims/[claimId]/Messages';
+import { VoteButton } from '@/app/claims/[claimId]/VoteButton';
 import { Card } from '@/components/Card';
 import { Error } from '@/components/Error';
 import { Tag } from '@/components/Tag';
 import { findClaim } from '@/lib/claims';
+import { getSession } from '@/lib/session';
 import { formatDistanceToNow } from 'date-fns';
 import { Suspense } from 'react';
 
@@ -14,26 +16,29 @@ const Claim = async ({claimId}: { claimId: string }) => {
         return <Error/>
     }
 
+    const currentSession = await getSession();
+    const currentSessionUserId = currentSession?.userId as string
+    const isClaimOwnedByUser = claim.author.id === currentSessionUserId;
+    const isClaimAlreadyVotedByUser = claim.votes?.map(vote => vote.author.id).includes(currentSessionUserId);
+
     return (
         <div>
             <section className="flex flex-row justify-between items-center">
                 <h1>{claim.title}</h1>
-                <DeleteClaim claimId={JSON.parse(JSON.stringify(claim._id))} userId={claim.userId}/>
+                <div className="flex flex-column gap-4">
+                    <VoteButton claimId={claim.id} isClaimAlreadyVotedByUser={isClaimAlreadyVotedByUser}/>
+                    {isClaimOwnedByUser && <DeleteClaim claimId={claim.id} userId={claim.author.id}/>}
+                </div>
             </section>
             <Card>
                 <section className="mt-4 ">
                     {claim.content}
                 </section>
-                <section className="mt-4 text-primary-700">
-                    Created{' '}
-                    {formatDistanceToNow(claim.createdAt, {
-                        addSuffix: true
-                    })}{' '}
-                    by {claim.userId}
-
+                <section className="mt-4 text-primary-700 text-sm">
+                    {`Votes: ${claim.votes?.length ?? 0}`}
                 </section>
-                <section className="mt-4 text-primary-700">
-                    {`Votes: ${claim.votes ?? 0}`}
+                <section className="mt-4 text-primary-700 text-xs">
+                    {`Created ${formatDistanceToNow(claim.createdAt, {addSuffix: true})} by ${claim.author.firstName}`}
                 </section>
                 <section className="flex flex-wrap mt-4">
                     {claim.tags.map((tag, index) => (
@@ -46,7 +51,7 @@ const Claim = async ({claimId}: { claimId: string }) => {
 
             {/*Need to serialize the data to be able to send it to the client component*/}
             {/*https://github.com/vercel/next.js/discussions/46137#discussioncomment-5047095*/}
-            <Messages claimId={JSON.parse(JSON.stringify(claim._id))} messages={JSON.parse(JSON.stringify(claim.messages))}/>
+            <Messages claimId={claim.id} messages={JSON.parse(JSON.stringify(claim.messages))}/>
         </div>
     )
 }

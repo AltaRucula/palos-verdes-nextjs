@@ -49,7 +49,7 @@ export const createClaim = async (
         content,
         tags,
         title,
-        userId: currentSession?.userId as string
+        author: currentSession?.userId as string
     })
 
     if (!claim) {
@@ -68,8 +68,7 @@ type DeleteClaimStatePayload = {
 }
 
 export const deleteClaim = async (
-    actionState: ActionState<DeleteClaimStatePayload>,
-    formData: FormData
+    actionState: ActionState<DeleteClaimStatePayload>
 ): Promise<ActionState<DeleteClaimStatePayload>> => {
 
     if (!actionState.payload) {

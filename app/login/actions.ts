@@ -35,7 +35,7 @@ export const login = async (
     // 3. Verify password hash
     if (user && bcrypt.compareSync(password, user.password)) {
         // 4. Create session
-        await createSession(user._id);
+        await createSession(user.id);
 
         return redirect('/');
     }

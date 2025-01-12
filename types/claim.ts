@@ -1,23 +1,41 @@
-export type Message = {
-    _id: string;
-    content: string;
-    createdAt: Date;
-}
+import { User } from '@/types/user';
 
 export type Claim = {
-    _id: string;
+    id: string;
     createdAt: Date;
     content: string;
     messages: Message[]
     tags: string[];
     title: string;
-    userId: string;
-    votes: number;
+    author: User;
+    votes: Vote[];
+}
+
+export type Message = {
+    id: string;
+    content: string;
+    createdAt: Date;
+    author: User;
+}
+
+export type Vote = {
+    id: string;
+    createdAt: Date;
+    author: User;
 }
 
 export type NewClaim = {
     content: string;
     tags: string[];
     title: string;
-    userId: string;
+    author: string;
+}
+
+export type NewMessage = {
+    content: string;
+    author: string;
+}
+
+export type NewVote = {
+    author: string;
 }

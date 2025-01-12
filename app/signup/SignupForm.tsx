@@ -13,6 +13,8 @@ export const SignupForm = () => {
 
     return (
         <form action={action} className="flex flex-col items-center p-10">
+            <Input disabled={isPending} name="firstName" type="text" placeholder="First name" size={30}/>
+            <Input disabled={isPending} name="lastName" type="text" placeholder="Last name" size={30}/>
             <Input disabled={isPending} name="email" type="text" placeholder="Email" size={30}/>
             <Input disabled={isPending} name="password" type="password" placeholder="Password" size={30}/>
             {state.errors && <p className="text-red-500">{state.errors}</p>}
