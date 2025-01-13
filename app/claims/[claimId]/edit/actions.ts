@@ -93,5 +93,5 @@ export const editClaim = async (
         }
     }
 
-    redirect('/claims');
+    redirect(`/claims/${claim.id}`);
 }
