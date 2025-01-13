@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 import * as claims from '@/lib/claims';
 import { getSession } from '@/lib/session';
@@ -6,14 +6,16 @@ import { ActionState } from '@/types/actionState';
 import { ClaimFormData } from '@/types/claim';
 import { redirect } from 'next/navigation';
 
-type CreateClaimStatePayload = {
+type EditClaimStatePayload = {
+    claimAuthorId: string;
     claimFormData: ClaimFormData;
+    claimId: string;
 }
 
-export const createClaim = async (
-    actionState: ActionState<CreateClaimStatePayload>,
+export const editClaim = async (
+    actionState: ActionState<EditClaimStatePayload>,
     formData: FormData
-): Promise<ActionState<CreateClaimStatePayload>> => {
+): Promise<ActionState<EditClaimStatePayload>> => {
 
     const currentSession = await getSession();
 
@@ -24,12 +26,26 @@ export const createClaim = async (
         }
     }
 
+    if (!actionState.payload) {
+        return {
+            errors: 'Invalid payload',
+            success: false
+        }
+    }
+
+    if (actionState.payload.claimAuthorId !== currentSession?.userId as string) {
+        return {
+            errors: 'You are not allowed to edit this claim',
+            success: false
+        }
+    }
+
     const title = formData.get('title') as string;
     const content = formData.get('content') as string;
     const rawTags = formData.get('tags') as string;
     const tags = rawTags.length > 0 ? rawTags.split(',') : [];
 
-    const claimFormData: ClaimFormData = {
+    const claimFormData = {
         title,
         content,
         tags
@@ -39,6 +55,7 @@ export const createClaim = async (
         return {
             errors: 'Title is required',
             payload: {
+                ...actionState.payload,
                 claimFormData
             },
             success: false
@@ -49,6 +66,7 @@ export const createClaim = async (
         return {
             errors: 'Content is required',
             payload: {
+                ...actionState.payload,
                 claimFormData
             },
             success: false
@@ -59,23 +77,21 @@ export const createClaim = async (
         return {
             errors: 'At least one tag is required',
             payload: {
+                ...actionState.payload,
                 claimFormData
             },
             success: false
         }
     }
 
-    const newClaim = await claims.createClaim({
-        ...claimFormData,
-        author: currentSession?.userId as string
-    })
+    const claim = await claims.updateClaim(actionState.payload.claimId, claimFormData);
 
-    if (!newClaim) {
+    if (!claim) {
         return {
-            errors: 'Error creating claim',
+            errors: 'Error editing claim',
             success: false
         }
     }
 
-    return redirect('/claims');
+    redirect('/claims');
 }

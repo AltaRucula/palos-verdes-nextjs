@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteClaim } from '@/app/claims/new/actions';
+import { deleteClaim } from '@/app/claims/[claimId]/actions';
 import { Button } from '@/components/Button';
 import { Modal } from '@/components/Modal';
 import React, { useActionState, useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ type Props = {
     userId: string;
 }
 
-export const DeleteClaim: React.FC<Props> = ({claimId, userId}) => {
+export const DeleteButton: React.FC<Props> = ({claimId, userId}) => {
     const [state, action, isPending] = useActionState(deleteClaim, {
         success: false,
         payload: {
@@ -48,13 +48,14 @@ export const DeleteClaim: React.FC<Props> = ({claimId, userId}) => {
                     </form>
                 )}
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}/>
+                onClose={() => setIsModalOpen(false)}
+            />
 
             <Button
                 disabled={isPending}
                 type="submit"
                 onClick={() => setIsModalOpen(true)}>
-                {isPending ? 'Working' : 'Delete this claim'}
+                {isPending ? 'Working' : 'Delete'}
             </Button>
 
         </div>

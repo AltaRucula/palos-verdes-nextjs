@@ -1,13 +1,15 @@
-import { DeleteClaim } from '@/app/claims/[claimId]/DeleteClaim';
+import { DeleteButton } from '@/app/claims/[claimId]/DeleteButton';
 import { LoadingSkeleton } from '@/app/claims/[claimId]/LoadingSkeleton';
 import { Messages } from '@/app/claims/[claimId]/Messages';
-import { VoteButton } from '@/app/claims/[claimId]/VoteButton';
+import { Votes } from '@/app/claims/[claimId]/Votes';
+import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Error } from '@/components/Error';
 import { Tag } from '@/components/Tag';
 import { findClaim } from '@/lib/claims';
 import { getSession } from '@/lib/session';
 import { formatDistanceToNow } from 'date-fns';
+import Link from 'next/link';
 import React, { Suspense } from 'react';
 
 type ClaimProps = {
@@ -30,8 +32,8 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
             <section className="flex flex-row justify-between items-center">
                 <h1>{claim.title}</h1>
                 <div className="flex flex-column gap-4">
-                    <VoteButton claimId={claim.id} isClaimAlreadyVotedByUser={isClaimAlreadyVotedByUser}/>
-                    {isClaimOwnedByUser && <DeleteClaim claimId={claim.id} userId={claim.author.id}/>}
+                    {isClaimOwnedByUser && <Link href={`/claims/${claim.id}/edit`}><Button>Edit</Button></Link>}
+                    {isClaimOwnedByUser && <DeleteButton claimId={claim.id} userId={claim.author.id}/>}
                 </div>
             </section>
             <Card>
@@ -39,7 +41,8 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
                     {claim.content}
                 </section>
                 <section className="mt-4 text-primary-700 text-sm">
-                    {`Votes: ${claim.votes?.length ?? 0}`}
+                    <Votes claimId={claim.id} isClaimAlreadyVotedByUser={isClaimAlreadyVotedByUser}
+                           votes={claim.votes?.length}/>
                 </section>
                 <section className="mt-4 text-primary-700 text-xs">
                     {`Created ${formatDistanceToNow(claim.createdAt, {addSuffix: true})} by ${claim.author.firstName}`}

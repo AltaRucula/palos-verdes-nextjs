@@ -39,3 +39,9 @@ export type NewMessage = {
 export type NewVote = {
     author: string;
 }
+
+export type ClaimFormData = {
+    title: string;
+    content: string;
+    tags: string[];
+}
