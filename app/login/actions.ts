@@ -33,7 +33,7 @@ export const login = async (
     const user = await findUserByEmail(email);
 
     // 3. Verify password hash
-    if (user && bcrypt.compareSync(password, user.password)) {
+    if (user && user.password && bcrypt.compareSync(password, user.password)) {
         // 4. Create session
         await createSession(user.id);
 

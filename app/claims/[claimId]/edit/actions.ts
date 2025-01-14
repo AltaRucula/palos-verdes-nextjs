@@ -8,8 +8,8 @@ import { redirect } from 'next/navigation';
 
 type EditClaimStatePayload = {
     claimAuthorId: string;
-    claimFormData: ClaimFormData;
     claimId: string;
+    formData: ClaimFormData;
 }
 
 export const editClaim = async (
@@ -56,7 +56,7 @@ export const editClaim = async (
             errors: 'Title is required',
             payload: {
                 ...actionState.payload,
-                claimFormData
+                formData: claimFormData
             },
             success: false
         }
@@ -67,7 +67,7 @@ export const editClaim = async (
             errors: 'Content is required',
             payload: {
                 ...actionState.payload,
-                claimFormData
+                formData: claimFormData
             },
             success: false
         }
@@ -78,7 +78,7 @@ export const editClaim = async (
             errors: 'At least one tag is required',
             payload: {
                 ...actionState.payload,
-                claimFormData
+                formData: claimFormData
             },
             success: false
         }

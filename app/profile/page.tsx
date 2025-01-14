@@ -1,5 +1,6 @@
 import { LoadingSkeleton } from '@/app/profile/LoadingSkeleton';
-import { LogoutForm } from '@/app/profile/LogoutForm';
+import { LogoutButton } from '@/app/profile/LogoutButton';
+import { UserNotLoggedIn } from '@/app/profile/UserNotLoggedIn';
 import { Card } from '@/components/Card';
 import { getSession } from '@/lib/session';
 import { findUser } from '@/lib/users';
@@ -15,22 +16,20 @@ const Profile = async () => {
         user = await findUser(userId);
     }
 
-    if (user === null) {
+    if (!user) {
         return (
-            <section>
-                User not logged in !
-                {' '}
-                <Link href="/login">Click here</Link>
-                {' '}
-                to be redirected to login page.
-            </section>
+            <UserNotLoggedIn/>
         )
     }
 
     return (
         <section>
-            User email: {user.email}
-            <LogoutForm/>
+            Hello {user.firstName}
+            <ul className="list-disc ml-4 mt-8">
+                <li><Link href="/profile/edit">Edit Profile</Link></li>
+                <li><Link href="/profile/password">Change Password</Link></li>
+                <li><LogoutButton/></li>
+            </ul>
         </section>
     )
 }

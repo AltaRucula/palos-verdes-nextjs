@@ -28,17 +28,15 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
     }
 
     return (
-        <div>
-            <EditForm
-                claimAuthorId={claim.author.id}
-                claimFormData={{
-                    title: claim.title,
-                    content: claim.content,
-                    tags: claim.tags
-                }}
-                claimId={claim.id}
-            />
-        </div>
+        <EditForm
+            claimAuthorId={claim.author.id}
+            formData={{
+                title: claim.title,
+                content: claim.content,
+                tags: claim.tags
+            }}
+            claimId={claim.id}
+        />
     )
 }
 

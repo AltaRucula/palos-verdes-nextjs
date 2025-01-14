@@ -13,3 +13,15 @@ export type User = {
     lastName: string;
     password: string;
 }
+
+export type ProfileEditFormData = {
+    email: string;
+    firstName: string;
+    lastName: string;
+}
+
+export type ChangePasswordFormData = {
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
