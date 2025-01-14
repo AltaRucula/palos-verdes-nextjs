@@ -44,7 +44,7 @@ export const ChangePasswordForm: React.FC<Props> = ({userId}) => {
                         placeholder="Confirm New Password"
                         size={30}/>
 
-                    {state.errors && <p className="text-red-500">{state.errors}</p>}
+                    {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
 
                     <Button
                         disabled={isPending}

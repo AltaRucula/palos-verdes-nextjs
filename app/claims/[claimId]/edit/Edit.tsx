@@ -14,7 +14,7 @@ type Props = {
     formData: ClaimFormData;
 }
 
-export const EditForm: React.FC<Props> = ({claimAuthorId, claimId, formData}) => {
+export const Edit: React.FC<Props> = ({claimAuthorId, claimId, formData}) => {
     const [state, action, isPending] = useActionState(editClaim, {
         success: false,
         payload: {

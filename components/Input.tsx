@@ -4,7 +4,7 @@ export const Input = (props: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElem
     return (
         <input {...{
             ...props,
-            className: `bg-secondary border-0 rounded-md py-2 px-4 my-2 ${props.className}`
+            className: `bg-secondary-light dark:bg-secondary-dark border-0 rounded-md py-2 px-4 my-2 ${props.className}`
         }} />
     )
 }

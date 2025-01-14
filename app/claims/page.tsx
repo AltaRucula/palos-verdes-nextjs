@@ -17,7 +17,7 @@ const Claims = async () => {
     if (claims.length === 0) return (
         <div className="flex flex-col items-center justify-center mt-12">
             <h1 className="text-2xl">No claims yet</h1>
-            <p className="text-secondary-500">
+            <p>
                 Create a new claim to get started
             </p>
         </div>
@@ -26,7 +26,7 @@ const Claims = async () => {
     return <div>
         {claims?.map((claim, index) => (
             <Link href={`/claims/${claim.id}`} key={index}>
-                <Card className="hover:bg-secondary" title={claim.title}>
+                <Card className="hover:bg-secondary-light dark:hover:bg-secondary-dark" title={claim.title}>
                     <section className="mt-4 text-sm">
                         Created {formatDistanceToNow(claim.createdAt, {
                         addSuffix: true

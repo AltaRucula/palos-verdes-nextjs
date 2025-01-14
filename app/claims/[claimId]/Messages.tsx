@@ -43,16 +43,16 @@ export const Messages: React.FC<Props> = ({claimId, messages}) => {
 
                 {state.payload?.messages?.map((message, index) => (
                     <div
-                        className="border-t border-dotted border-tertiary py-4"
+                        className="border-t border-dotted border-tertiary-light dark:border-tertiary-dark py-4"
                         key={index}>
                         {message.content}
-                        <div className="text-secondary-400 text-xs">
+                        <div className="text-xs">
                             {`Created ${formatDistanceToNow(message.createdAt, {addSuffix: true})} by ${message.author.firstName}`}
                         </div>
                     </div>
                 ))}
 
-                {state.errors && <p className="text-red-500">{state.errors}</p>}
+                {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
             </div>
         </Card>
     )

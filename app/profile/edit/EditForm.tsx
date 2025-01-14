@@ -66,7 +66,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                         placeholder="Email"
                         size={30}
                     />
-                    {state.errors && <p className="text-red-500">{state.errors}</p>}
+                    {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
                     <Button
                         disabled={isPending}
                         type="submit">

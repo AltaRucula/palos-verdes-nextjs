@@ -4,7 +4,7 @@ export const Button = (props: React.DetailedHTMLProps<React.ButtonHTMLAttributes
     return (
         <button {...{
             ...props,
-            className: `hover:bg-secondary rounded-md my-2 py-2 px-8 ${props.disabled ? 'cursor-not-allowed' +
+            className: `hover:bg-secondary-light dark:hover:bg-secondary-dark rounded-md my-2 py-2 px-8 ${props.disabled ? 'cursor-not-allowed' +
                 ' opacity-50' : ''} ${props.className}`
         }}/>
     )

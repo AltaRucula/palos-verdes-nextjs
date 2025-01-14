@@ -1,4 +1,5 @@
 import { Button } from '@/components/Button';
+import DarkMode from '@/components/DarkMode';
 import { getSession } from "@/lib/session";
 import Link from "next/link";
 import React from 'react';
@@ -18,7 +19,6 @@ const linksForUserWithoutSession: Link[] = [
 const linksForUserWithSession: Link[] = [
     {href: '/', label: 'Home', key: 'home'},
     {href: '/claims', label: 'Claims', key: 'claims'},
-    {href: '/settings', label: 'Settings', key: 'settings'},
     {href: '/profile', label: 'Profile', key: 'profile'}
 ];
 
@@ -34,13 +34,14 @@ export const Navbar: React.FC = async () => {
     }
 
     return (
-        <div className="flex border-b border-secondary justify-between mx-12 py-6">
+        <div className="flex border-b border-secondary-light dark:border-secondary-dark justify-between mx-12 py-6">
             {getLinks().map(({href, label, key}) => (
                 <Link href={href} key={key}>
                     <Button>
                         {label}
                     </Button>
                 </Link>))}
+            <DarkMode/>
         </div>
     );
 };

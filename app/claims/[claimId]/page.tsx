@@ -40,14 +40,14 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
                 <section className="mt-4 ">
                     {claim.content}
                 </section>
-                <section className="mt-4 text-primary-700 text-sm">
+                <section className="mt-4 text-sm">
                     <Votes
                         claimId={claim.id}
                         isClaimAlreadyVotedByUser={isClaimAlreadyVotedByUser}
                         votes={claim.votes?.length}
                     />
                 </section>
-                <section className="mt-4 text-primary-700 text-xs">
+                <section className="mt-4 text-xs">
                     {`Created ${formatDistanceToNow(claim.createdAt, {addSuffix: true})} by ${claim.author.firstName}`}
                 </section>
                 <section className="flex flex-wrap mt-4">

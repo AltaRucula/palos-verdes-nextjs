@@ -1,4 +1,4 @@
-import { EditForm } from '@/app/claims/[claimId]/edit/EditForm';
+import { Edit } from '@/app/claims/[claimId]/edit/Edit';
 import { LoadingSkeleton } from '@/app/claims/[claimId]/edit/LoadingSkeleton';
 import { Error } from '@/components/Error';
 import { findClaim } from '@/lib/claims';
@@ -28,7 +28,7 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
     }
 
     return (
-        <EditForm
+        <Edit
             claimAuthorId={claim.author.id}
             formData={{
                 title: claim.title,

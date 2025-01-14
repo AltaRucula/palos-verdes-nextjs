@@ -7,7 +7,7 @@ type Props = {
 export const Error = (props: Props) => {
     return <div {...{
         ...props,
-        className: `bg-red-500 text-white p-12 rounded-md ${props.className}`
+        className: `bg-error-dark dark:bg-error-light p-12 rounded-md ${props.className}`
     }}>
         {props.text ?? 'There was an error, please refresh the page'}
     </div>;

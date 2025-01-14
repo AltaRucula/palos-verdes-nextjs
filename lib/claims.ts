@@ -93,7 +93,14 @@ export const addMessage = async (claimId: string, message: NewMessage): Promise<
                 messages: message
             }
         }, {
-            new: true
+            new: true,
+            populate: {
+                path: 'messages',
+                populate: {
+                    path: 'author',
+                    select: 'firstName'
+                }
+            }
         });
         if (claim) {
             claim.messages.sort(sortMessagesByCreatedAt);

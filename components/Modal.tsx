@@ -18,8 +18,8 @@ export const Modal: React.FC<Props> = ({title, body, footer, isOpen, onClose}) =
             className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-10"
             role="dialog"
         >
-            <div className="bg-tertiary rounded-md max-w-md w-full">
-                <div className="bg-secondary flex justify-between items-center px-6 py-4 ">
+            <div className="bg-tertiary-light dark:bg-tertiary-dark rounded-md max-w-md w-full">
+                <div className="bg-secondary-light dark:bg-secondary-dark flex justify-between items-center px-6 py-4 ">
                     <h2 className="text-xl font-bold">
                         {title}
                     </h2>
@@ -32,7 +32,7 @@ export const Modal: React.FC<Props> = ({title, body, footer, isOpen, onClose}) =
                 <div className="px-6 py-6 ">
                     {body}
                 </div>
-                <div className="border-t border-secondary px-6 py-2 ">
+                <div className="border-t border-secondary-light dark:border-secondary-dark px-6 py-2 ">
                     {footer}
                 </div>
             </div>
