@@ -1,45 +1,45 @@
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Tag } from '@/components/Tag';
+import React from 'react';
 
 export const LoadingSkeleton = () => {
     return (
         <div className="animate-pulse">
-            <h1>
-                <div className="bg-primary-600 rounded-full mb-4 h-6 w-96"/>
-            </h1>
+            <section className="flex flex-row justify-between items-center">
+                <h1>
+                    <div className="bg-secondary rounded-full h-6 w-96"/>
+                </h1>
+                <div className="flex flex-column gap-4">
+                    <Button disabled={true}>Edit</Button>
+                    <Button disabled={true}>Delete</Button>
+                </div>
+            </section>
             <Card>
                 <section className="mt-6 ">
-                    <div className="bg-primary-600 rounded-full h-4 w-full mb-4"/>
-                    <div className="bg-primary-600 rounded-full h-4 w-full mb-4"/>
-                    <div className="bg-primary-600 rounded-full h-4 w-80"/>
+                    <div className="bg-secondary rounded-full h-4 w-full mb-4"/>
+                    <div className="bg-secondary rounded-full h-4 w-full mb-4"/>
+                    <div className="bg-secondary rounded-full h-4 w-80"/>
                 </section>
                 <section className="mt-6 ">
-                    <div className="bg-primary-600 rounded-full h-4 w-40"/>
+                    <div className="bg-secondary rounded-full h-4 w-40"/>
                 </section>
                 <section className="mt-6 ">
-                    <div className="bg-primary-600 rounded-full h-4 w-20"/>
+                    <div className="bg-secondary rounded-full h-4 w-20"/>
                 </section>
                 <section className="flex mt-8 ">
-                    <Tag>
-                        <div className="rounded-full h-2 w-20"/>
-                    </Tag>
-                    <Tag>
-                        <div className="rounded-full h-2 w-12"/>
-                    </Tag>
-                    <Tag>
-                        <div className="rounded-full h-2 w-36"/>
-                    </Tag>
+                    <div className="bg-tertiary ounded-full h-2 w-20 mr-4"/>
+                    <div className="bg-tertiary rounded-full h-2 w-12 mr-4"/>
+                    <div className="bg-tertiary rounded-full h-2 w-36"/>
                 </section>
             </Card>
 
-            <h1>Messages</h1>
+            <h2>Messages</h2>
 
             <Card>
                 <div className="flex flex-col">
                 <textarea
                     disabled={true}
-                    className="border-primary-600 border mx-auto p-4 min-w-full rounded-md resize-none"
+                    className="bg-secondary border-0 mx-auto p-4 min-w-full rounded-md resize-none"
                     name="message"
                     placeholder="Type your message"
                     rows={3}/>
@@ -48,9 +48,9 @@ export const LoadingSkeleton = () => {
 
                 <div className="mt-8">
                     {Array.from(Array(2).keys()).map((_, index) =>
-                        <div className="border-t border-dotted border-primary-600 py-4" key={index}>
-                            <div className="bg-primary-600 rounded-full h-4 w-80 mb-4"/>
-                            <div className="bg-primary-600 rounded-full h-4 w-40"/>
+                        <div className="border-t border-dotted border-tertiary py-4" key={index}>
+                            <div className="bg-secondary rounded-full h-4 w-80 mb-4"/>
+                            <div className="bg-secondary rounded-full h-2 w-40"/>
                         </div>
                     )}
                 </div>

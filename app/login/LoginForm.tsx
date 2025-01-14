@@ -17,7 +17,7 @@ export const LoginForm = () => {
             <Input disabled={isPending} name="password" type="password" placeholder="Password" size={30}/>
             {state.errors && <p className="text-red-500">{state.errors}</p>}
             <Button disabled={isPending} type="submit">{isPending ? 'Working' : 'Login'}</Button>
-            <p className="mt-6">Do you need to create an account? <Link href="/signup">Signup</Link></p>
+            <p className="mt-6">Do you need to create an account? <Link href="/signup"><Button>Signup</Button></Link></p>
         </form>
     )
 }

@@ -41,8 +41,11 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
                     {claim.content}
                 </section>
                 <section className="mt-4 text-primary-700 text-sm">
-                    <Votes claimId={claim.id} isClaimAlreadyVotedByUser={isClaimAlreadyVotedByUser}
-                           votes={claim.votes?.length}/>
+                    <Votes
+                        claimId={claim.id}
+                        isClaimAlreadyVotedByUser={isClaimAlreadyVotedByUser}
+                        votes={claim.votes?.length}
+                    />
                 </section>
                 <section className="mt-4 text-primary-700 text-xs">
                     {`Created ${formatDistanceToNow(claim.createdAt, {addSuffix: true})} by ${claim.author.firstName}`}
@@ -54,7 +57,7 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
                 </section>
             </Card>
 
-            <h1>Messages</h1>
+            <h2>Messages</h2>
 
             {/*Need to serialize the data to be able to send it to the client component*/}
             {/*https://github.com/vercel/next.js/discussions/46137#discussioncomment-5047095*/}

@@ -1,5 +1,5 @@
 import { EditForm } from '@/app/claims/[claimId]/edit/EditForm';
-import { LoadingSkeleton } from '@/app/claims/[claimId]/LoadingSkeleton';
+import { LoadingSkeleton } from '@/app/claims/[claimId]/edit/LoadingSkeleton';
 import { Error } from '@/components/Error';
 import { findClaim } from '@/lib/claims';
 import { getSession } from '@/lib/session';

@@ -1,5 +1,5 @@
 import { Card } from '@/components/Card';
-import { Tag } from '@/components/Tag';
+import React from 'react';
 
 export const LoadingSkeleton = () => {
     return (
@@ -7,21 +7,15 @@ export const LoadingSkeleton = () => {
             {Array.from(Array(3).keys()).map((_, index) =>
                 <Card key={index}>
                     <h1>
-                        <div className="bg-primary-600 rounded-full mb-4 h-6 w-96"/>
+                        <div className="bg-secondary rounded-full mb-4 h-6 w-96"/>
                     </h1>
                     <section className="mt-6 ">
-                        <div className="bg-primary-600 rounded-full h-4 w-80"/>
+                        <div className="bg-secondary rounded-full h-4 w-80"/>
                     </section>
                     <section className="flex mt-8 ">
-                        <Tag>
-                            <div className="rounded-full h-3 w-20"/>
-                        </Tag>
-                        <Tag>
-                            <div className="rounded-full h-3 w-12"/>
-                        </Tag>
-                        <Tag>
-                            <div className="rounded-full h-3 w-36"/>
-                        </Tag>
+                        <div className="bg-tertiary ounded-full h-2 w-20 mr-4"/>
+                        <div className="bg-tertiary rounded-full h-2 w-12 mr-4"/>
+                        <div className="bg-tertiary rounded-full h-2 w-36"/>
                     </section>
                 </Card>
             )}

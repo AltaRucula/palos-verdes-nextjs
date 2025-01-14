@@ -24,9 +24,18 @@ export const Messages: React.FC<Props> = ({claimId, messages}) => {
 
     return (
         <Card>
-            <form action={action} className="flex flex-col">
-                <TextArea disabled={isPending} name="message" placeholder="Type your message"/>
-                <Button disabled={isPending} type="submit">{isPending ? 'Working' : 'Send'}</Button>
+            <form action={action} className=" flex flex-col">
+                <TextArea
+                    disabled={isPending}
+                    name="message"
+                    placeholder="Type your message"
+                />
+                <Button
+                    // className="min-w-72"
+                    disabled={isPending}
+                    type="submit">
+                    {isPending ? 'Working' : 'Send'}
+                </Button>
             </form>
 
             <div className="mt-8">
@@ -34,7 +43,7 @@ export const Messages: React.FC<Props> = ({claimId, messages}) => {
 
                 {state.payload?.messages?.map((message, index) => (
                     <div
-                        className="border-t border-dotted border-primary-600 py-4"
+                        className="border-t border-dotted border-tertiary py-4"
                         key={index}>
                         {message.content}
                         <div className="text-secondary-400 text-xs">

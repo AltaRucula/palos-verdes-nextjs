@@ -21,10 +21,11 @@ export const Votes: React.FC<Props> = ({claimId, isClaimAlreadyVotedByUser, vote
     });
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-row items-center gap-4">
             {`Votes: ${state.payload?.votes}`}
             <form action={action}>
                 <Button
+                    className="m-0 p-0"
                     disabled={state.payload?.isClaimAlreadyVotedByUser ?? isPending}
                     type="submit">
                     {isPending ? 'Working' : 'Vote'}

@@ -36,7 +36,7 @@ export const ClaimForm: React.FC<Props> = ({action, errors, initialValues, isPen
             <section className="flex flex-wrap mt-4">
                 <input name="tags" type="hidden" value={selectedTags}/>
                 {TAGS.map((tag, index) => (
-                    <Tag className={`cursor-pointer ${selectedTags.includes(tag) ? 'bg-primary-600' : 'bg-primary-900'}`}
+                    <Tag className={`cursor-pointer ${selectedTags.includes(tag) ? 'bg-primary' : 'bg-primary-900'}`}
                          key={index}
                          onClick={() => {
                              if (isPending) {

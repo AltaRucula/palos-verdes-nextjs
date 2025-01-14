@@ -5,7 +5,7 @@ export const TextArea = (props: DetailedHTMLProps<TextareaHTMLAttributes<HTMLTex
         <textarea
             {...{
                 ...props,
-                className: `border-primary-600 border mx-auto p-4 min-w-full rounded-md resize-none ${props.className}`
+                className: `bg-secondary border-0 mx-auto p-4 min-w-full rounded-md resize-none ${props.className}`
             }}
             rows={3}/>
     )

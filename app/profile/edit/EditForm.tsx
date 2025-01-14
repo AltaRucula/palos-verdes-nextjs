@@ -41,7 +41,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                     //     // Store the payload so the modal can execute the action later
                     //     setActionPayload(payload)
                     // }}
-                    className="flex flex-col items-center p-10">
+                    className="flex flex-col items-center p-8">
                     <Input
                         defaultValue={state.payload?.formData.firstName}
                         disabled={isPending}

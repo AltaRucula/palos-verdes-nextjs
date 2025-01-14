@@ -26,7 +26,7 @@ const Claims = async () => {
     return <div>
         {claims?.map((claim, index) => (
             <Link href={`/claims/${claim.id}`} key={index}>
-                <Card title={claim.title}>
+                <Card className="hover:bg-secondary" title={claim.title}>
                     <section className="mt-4 text-sm">
                         Created {formatDistanceToNow(claim.createdAt, {
                         addSuffix: true
