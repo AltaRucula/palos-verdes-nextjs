@@ -6,7 +6,7 @@ import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
 import { ProfileEditFormData } from '@/types/user';
-import React, { useActionState, useEffect, useState } from 'react';
+import React, { useActionState, useState } from 'react';
 
 type Props = {
     formData: ProfileEditFormData;
@@ -21,15 +21,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
             userId
         }
     });
-    const [actionPayload, setActionPayload] = useState<FormData | null>(null);
-
-    useEffect(() => {
-        if (state.success) {
-            setActionPayload(null);
-        }
-    }, [
-        state.success
-    ])
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <div className="flex-auto">
@@ -37,11 +29,9 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
             <Card>
                 <form
                     action={action}
-                    // action={(payload: FormData) => {
-                    //     // Store the payload so the modal can execute the action later
-                    //     setActionPayload(payload)
-                    // }}
-                    className="flex flex-col items-center p-8">
+                    className="flex flex-col items-center p-8"
+                    onSubmit={() => setShowModal(false)}
+                >
                     <Input
                         defaultValue={state.payload?.formData.firstName}
                         disabled={isPending}
@@ -67,34 +57,42 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                         size={30}
                     />
                     {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
+                    
                     <Button
                         disabled={isPending}
-                        type="submit">
+                        onClick={() => setShowModal(true)}
+                        type="button"
+                    >
                         {isPending ? 'Working' : 'Save'}
                     </Button>
+
+                    {/* Have to include the modal in the form so that the YES button from the modal can*/}
+                    {/* submit the form using the action function from the useActionState hook */}
+                    <Modal
+                        title="Profile"
+                        body="Are you sure you want to save this data?"
+                        footer={(
+                            <div className="flex gap-2 justify-end mt-2">
+                                <Button
+                                    disabled={isPending}
+                                    onClick={() => setShowModal(false)}
+                                    type="button"
+                                >
+                                    {isPending ? 'Working' : 'No'}
+                                </Button>
+                                <Button
+                                    disabled={isPending}
+                                    type="submit"
+                                >
+                                    {isPending ? 'Working' : 'Yes'}
+                                </Button>
+                            </div>
+                        )}
+                        isOpen={showModal}
+                        onClose={() => setShowModal(false)}
+                    />
                 </form>
             </Card>
-
-            <Modal
-                title="Profile Edit"
-                body="Are you sure you want to edit your data? This action cannot be undone."
-                footer={(
-                    <div className="flex gap-2 justify-end mt-2">
-                        <Button
-                            disabled={isPending}
-                            onClick={() => setActionPayload(null)}>
-                            {isPending ? 'Working' : 'No'}
-                        </Button>
-                        <Button
-                            disabled={isPending}
-                            onClick={() => actionPayload && action(actionPayload)}>
-                            {isPending ? 'Working' : 'Yes'}
-                        </Button>
-                    </div>
-                )}
-                isOpen={!!actionPayload}
-                onClose={() => setActionPayload(null)}
-            />
         </div>
     );
 }

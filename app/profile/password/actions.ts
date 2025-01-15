@@ -60,7 +60,7 @@ export const changePassword = async (
 
     if (!confirmNewPassword || confirmNewPassword !== newPassword) {
         return {
-            errors: 'Password confirmation is required and must match new password',
+            errors: 'Passwords do not match',
             payload: {
                 ...actionState.payload
             },
