@@ -4,23 +4,37 @@ import { PASSWORD_SALT_OR_ROUND } from '@/lib/env';
 import { createSession } from '@/lib/session';
 import { createUser } from '@/lib/users';
 import { ActionState } from '@/types/actionState';
+import { SignupFormData } from '@/types/user';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 
-export const signup = async (
-    actionState: ActionState<null>,
-    formData: FormData
-): Promise<ActionState<null>> => {
+type SignupStatePayload = {
+    savedFormData: SignupFormData;
+};
 
+export const signup = async (
+    actionState: ActionState<SignupStatePayload>,
+    formData: FormData
+): Promise<ActionState<SignupStatePayload>> => {
+
+    const email = formData.get('email') as string;
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
-    const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+
+    const savedFormData: SignupFormData = {
+        email,
+        firstName,
+        lastName
+    }
 
     // 1. Validate fields
     if (!firstName) {
         return {
             errors: 'First name is required',
+            payload: {
+                savedFormData
+            },
             success: false
         }
     }
@@ -28,6 +42,9 @@ export const signup = async (
     if (!lastName) {
         return {
             errors: 'Last name is required',
+            payload: {
+                savedFormData
+            },
             success: false
         }
     }
@@ -35,6 +52,9 @@ export const signup = async (
     if (!email) {
         return {
             errors: 'Email is required',
+            payload: {
+                savedFormData
+            },
             success: false
         }
     }
@@ -42,6 +62,9 @@ export const signup = async (
     if (!password) {
         return {
             errors: 'Password is required',
+            payload: {
+                savedFormData
+            },
             success: false
         }
     }
@@ -50,9 +73,7 @@ export const signup = async (
     const hashedPassword = bcrypt.hashSync(password, PASSWORD_SALT_OR_ROUND)
 
     const user = await createUser({
-        email,
-        firstName,
-        lastName,
+        ...savedFormData,
         password: hashedPassword
     });
 

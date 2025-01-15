@@ -17,7 +17,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
     const [state, action, isPending] = useActionState(editProfile, {
         success: false,
         payload: {
-            formData: formData,
+            savedFormData: formData,
             userId
         }
     });
@@ -33,7 +33,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                     onSubmit={() => setShowModal(false)}
                 >
                     <Input
-                        defaultValue={state.payload?.formData.firstName}
+                        defaultValue={state.payload?.savedFormData.firstName}
                         disabled={isPending}
                         name="firstName"
                         type="text"
@@ -41,7 +41,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                         size={30}
                     />
                     <Input
-                        defaultValue={state.payload?.formData.lastName}
+                        defaultValue={state.payload?.savedFormData.lastName}
                         disabled={isPending}
                         name="lastName"
                         type="text"
@@ -49,7 +49,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                         size={30}
                     />
                     <Input
-                        defaultValue={state.payload?.formData.email}
+                        defaultValue={state.payload?.savedFormData.email}
                         disabled={isPending}
                         name="email"
                         type="text"
@@ -57,7 +57,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                         size={30}
                     />
                     {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
-                    
+
                     <Button
                         disabled={isPending}
                         onClick={() => setShowModal(true)}

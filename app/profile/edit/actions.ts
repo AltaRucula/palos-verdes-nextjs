@@ -7,7 +7,7 @@ import { ProfileEditFormData } from '@/types/user';
 import { redirect } from 'next/navigation';
 
 type EditClaimStatePayload = {
-    formData: ProfileEditFormData;
+    savedFormData: ProfileEditFormData;
     userId: string;
 }
 
@@ -36,7 +36,7 @@ export const editProfile = async (
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
 
-    const userFormData = {
+    const savedFormData = {
         email,
         firstName,
         lastName
@@ -47,7 +47,7 @@ export const editProfile = async (
             errors: 'Email is required',
             payload: {
                 ...actionState.payload,
-                formData: userFormData
+                savedFormData
             },
             success: false
         }
@@ -58,7 +58,7 @@ export const editProfile = async (
             errors: 'First Name is required',
             payload: {
                 ...actionState.payload,
-                formData: userFormData
+                savedFormData
             },
             success: false
         }
@@ -69,13 +69,13 @@ export const editProfile = async (
             errors: 'Last Name is required',
             payload: {
                 ...actionState.payload,
-                formData: userFormData
+                savedFormData
             },
             success: false
         }
     }
 
-    const user = await users.updateUser(actionState.payload.userId, userFormData);
+    const user = await users.updateUser(actionState.payload.userId, savedFormData);
 
     if (!user) {
         return {

@@ -7,7 +7,7 @@ import { ClaimFormData } from '@/types/claim';
 import { redirect } from 'next/navigation';
 
 type CreateClaimStatePayload = {
-    claimFormData: ClaimFormData;
+    savedFormData: ClaimFormData;
 }
 
 export const createClaim = async (
@@ -29,7 +29,7 @@ export const createClaim = async (
     const rawTags = formData.get('tags') as string;
     const tags = rawTags.length > 0 ? rawTags.split(',') : [];
 
-    const claimFormData: ClaimFormData = {
+    const savedFormData: ClaimFormData = {
         title,
         content,
         tags
@@ -39,7 +39,7 @@ export const createClaim = async (
         return {
             errors: 'Title is required',
             payload: {
-                claimFormData
+                savedFormData
             },
             success: false
         }
@@ -49,7 +49,7 @@ export const createClaim = async (
         return {
             errors: 'Content is required',
             payload: {
-                claimFormData
+                savedFormData
             },
             success: false
         }
@@ -59,14 +59,14 @@ export const createClaim = async (
         return {
             errors: 'At least one tag is required',
             payload: {
-                claimFormData
+                savedFormData
             },
             success: false
         }
     }
 
     const newClaim = await claims.createClaim({
-        ...claimFormData,
+        ...savedFormData,
         author: currentSession?.userId as string
     })
 

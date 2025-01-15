@@ -13,12 +13,47 @@ export const SignupForm = () => {
 
     return (
         <form action={action} className="flex flex-col items-center p-10">
-            <Input disabled={isPending} name="firstName" type="text" placeholder="First name" size={30}/>
-            <Input disabled={isPending} name="lastName" type="text" placeholder="Last name" size={30}/>
-            <Input disabled={isPending} name="email" type="text" placeholder="Email" size={30}/>
-            <Input disabled={isPending} name="password" type="password" placeholder="Password" size={30}/>
+            <Input
+                defaultValue={state.payload?.savedFormData.firstName}
+                disabled={isPending}
+                name="firstName"
+                type="text"
+                placeholder="First name"
+                size={30}
+            />
+            <Input
+                defaultValue={state.payload?.savedFormData.lastName}
+                disabled={isPending}
+                name="lastName"
+                type="text"
+                placeholder="Last name"
+                size={30}
+            />
+            <Input
+                defaultValue={state.payload?.savedFormData.email}
+                disabled={isPending}
+                name="email"
+                type="text"
+                placeholder="Email"
+                size={30}
+            />
+            <Input
+                disabled={isPending}
+                name="password"
+                type="password"
+                placeholder="Password"
+                size={30}
+            />
+
             {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
-            <Button disabled={isPending} type="submit">{isPending ? 'Working' : 'Signup'}</Button>
+
+            <Button
+                disabled={isPending}
+                type="submit"
+            >
+                {isPending ? 'Working' : 'Signup'}
+            </Button>
+
             <p className="mt-6">Already have an account? <Link href="/login"><Button>Login</Button></Link></p>
         </form>
     )

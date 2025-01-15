@@ -17,7 +17,7 @@ export const Edit: React.FC<Props> = ({claimAuthorId, claimId, formData}) => {
         success: false,
         payload: {
             claimAuthorId,
-            formData,
+            savedFormData: formData,
             claimId
         }
     });
@@ -29,7 +29,7 @@ export const Edit: React.FC<Props> = ({claimAuthorId, claimId, formData}) => {
                 <ClaimForm
                     action={action}
                     errors={state.errors}
-                    initialValues={state.payload?.formData}
+                    initialValues={state.payload?.savedFormData}
                     isPending={isPending}
                 />
             </Card>

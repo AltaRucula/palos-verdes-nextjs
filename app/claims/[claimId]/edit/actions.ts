@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation';
 type EditClaimStatePayload = {
     claimAuthorId: string;
     claimId: string;
-    formData: ClaimFormData;
+    savedFormData: ClaimFormData;
 }
 
 export const editClaim = async (
@@ -45,7 +45,7 @@ export const editClaim = async (
     const rawTags = formData.get('tags') as string;
     const tags = rawTags.length > 0 ? rawTags.split(',') : [];
 
-    const claimFormData = {
+    const savedFormData = {
         title,
         content,
         tags
@@ -56,7 +56,7 @@ export const editClaim = async (
             errors: 'Title is required',
             payload: {
                 ...actionState.payload,
-                formData: claimFormData
+                savedFormData
             },
             success: false
         }
@@ -67,7 +67,7 @@ export const editClaim = async (
             errors: 'Content is required',
             payload: {
                 ...actionState.payload,
-                formData: claimFormData
+                savedFormData
             },
             success: false
         }
@@ -78,13 +78,13 @@ export const editClaim = async (
             errors: 'At least one tag is required',
             payload: {
                 ...actionState.payload,
-                formData: claimFormData
+                savedFormData
             },
             success: false
         }
     }
 
-    const claim = await claims.updateClaim(actionState.payload.claimId, claimFormData);
+    const claim = await claims.updateClaim(actionState.payload.claimId, savedFormData);
 
     if (!claim) {
         return {

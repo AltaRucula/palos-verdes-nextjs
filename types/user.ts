@@ -14,14 +14,24 @@ export type User = {
     password: string;
 }
 
-export type ProfileEditFormData = {
+export type ChangePasswordFormData = {
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
+
+export type LoginFormData = {
+    email: string;
+}
+
+export type SignupFormData = {
     email: string;
     firstName: string;
     lastName: string;
 }
 
-export type ChangePasswordFormData = {
-    currentPassword: string;
-    newPassword: string;
-    confirmNewPassword: string;
+export type ProfileEditFormData = {
+    email: string;
+    firstName: string;
+    lastName: string;
 }
