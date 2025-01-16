@@ -1,5 +1,5 @@
 import { createClaim, findClaims } from '@/lib/claims';
-import { Claims } from '@/types/claims';
+import { NewClaim } from '@/types/claims';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async () => {
@@ -12,7 +12,7 @@ export const GET = async () => {
 };
 
 export const POST = async ({ body }: NextRequest) => {
-    const claim = await createClaim(body as unknown as Claims);
+    const claim = await createClaim(body as unknown as NewClaim);
     if (claim) {
         return NextResponse.json(claim);
     } else {
