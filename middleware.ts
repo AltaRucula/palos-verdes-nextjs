@@ -1,6 +1,6 @@
 import { getSession } from '@/lib/session';
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const PROTECTED_ROUTES = ['/claims', '/settings', '/profile'];
 
@@ -19,9 +19,9 @@ export const middleware = async (request: NextRequest) => {
 
     // 4. Render route
     return NextResponse.next();
-}
+};
 
 // Routes middleware should *not* run on
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image).*)']
-}
+    matcher: ['/((?!api|_next/static|_next/image).*)'],
+};

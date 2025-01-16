@@ -14,9 +14,7 @@ const User: React.FC = async () => {
     }
 
     if (!user) {
-        return (
-            <UserNotLoggedIn/>
-        )
+        return <UserNotLoggedIn />;
     }
 
     return (
@@ -24,21 +22,21 @@ const User: React.FC = async () => {
             formData={{
                 email: user.email,
                 firstName: user.firstName,
-                lastName: user.lastName
+                lastName: user.lastName,
             }}
             userId={user.id}
         />
-    )
-}
+    );
+};
 
 const Page: React.FC = async () => {
     return (
         <div className="mx-auto">
-            <Suspense fallback={<LoadingSkeleton/>}>
-                <User/>
+            <Suspense fallback={<LoadingSkeleton />}>
+                <User />
             </Suspense>
         </div>
-    )
-}
+    );
+};
 
 export default Page;

@@ -8,16 +8,16 @@ type Props = {
     claimId: string;
     isClaimAlreadyVotedByUser?: boolean;
     votes?: number;
-}
+};
 
-export const Votes: React.FC<Props> = ({claimId, isClaimAlreadyVotedByUser, votes}) => {
+export const Votes: React.FC<Props> = ({ claimId, isClaimAlreadyVotedByUser, votes }) => {
     const [state, action, isPending] = useActionState(voteClaim, {
         success: false,
         payload: {
             claimId: claimId,
             isClaimAlreadyVotedByUser: isClaimAlreadyVotedByUser ?? false,
-            votes: votes ?? 0
-        }
+            votes: votes ?? 0,
+        },
     });
 
     return (
@@ -27,10 +27,11 @@ export const Votes: React.FC<Props> = ({claimId, isClaimAlreadyVotedByUser, vote
                 <Button
                     className="m-0 p-0"
                     disabled={state.payload?.isClaimAlreadyVotedByUser ?? isPending}
-                    type="submit">
+                    type="submit"
+                >
                     {isPending ? 'Working' : 'Vote'}
                 </Button>
             </form>
         </div>
-    )
-}
+    );
+};

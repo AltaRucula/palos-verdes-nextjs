@@ -10,16 +10,16 @@ type Props = {
     claimAuthorId: string;
     claimId: string;
     formData: ClaimFormData;
-}
+};
 
-export const Edit: React.FC<Props> = ({claimAuthorId, claimId, formData}) => {
+export const Edit: React.FC<Props> = ({ claimAuthorId, claimId, formData }) => {
     const [state, action, isPending] = useActionState(editClaim, {
         success: false,
         payload: {
             claimAuthorId,
             savedFormData: formData,
-            claimId
-        }
+            claimId,
+        },
     });
 
     return (
@@ -35,4 +35,4 @@ export const Edit: React.FC<Props> = ({claimAuthorId, claimId, formData}) => {
             </Card>
         </div>
     );
-}
+};

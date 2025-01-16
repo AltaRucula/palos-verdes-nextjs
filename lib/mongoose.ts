@@ -1,4 +1,4 @@
-import {MONGODB_URI} from "@/lib/env";
+import { MONGODB_URI } from '@/lib/env';
 import mongoose from 'mongoose';
 
 declare global {
@@ -13,9 +13,7 @@ if (!cached) {
 
 export const dbConnect = async () => {
     if (!MONGODB_URI) {
-        throw new Error(
-            "Please define the MONGODB_URI environment variable inside .env.local",
-        );
+        throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
     }
 
     if (cached.conn) {
@@ -37,4 +35,4 @@ export const dbConnect = async () => {
     }
 
     return cached.conn;
-}
+};

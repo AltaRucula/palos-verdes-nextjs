@@ -17,22 +17,26 @@ const Profile = async () => {
     }
 
     if (!user) {
-        return (
-            <UserNotLoggedIn/>
-        )
+        return <UserNotLoggedIn />;
     }
 
     return (
         <section>
             Hello {user.firstName}
             <ul className="list-disc ml-4 mt-8">
-                <li><Link href="/profile/edit">Edit Profile</Link></li>
-                <li><Link href="/profile/password">Change Password</Link></li>
-                <li><LogoutButton/></li>
+                <li>
+                    <Link href="/profile/edit">Edit Profile</Link>
+                </li>
+                <li>
+                    <Link href="/profile/password">Change Password</Link>
+                </li>
+                <li>
+                    <LogoutButton />
+                </li>
             </ul>
         </section>
-    )
-}
+    );
+};
 
 const Page = () => {
     return (
@@ -40,12 +44,11 @@ const Page = () => {
             <h1 className="mb-4">Profile</h1>
 
             <Card>
-                <Suspense fallback={<LoadingSkeleton/>}>
-                    <Profile/>
+                <Suspense fallback={<LoadingSkeleton />}>
+                    <Profile />
                 </Suspense>
             </Card>
-
         </div>
     );
-}
+};
 export default Page;

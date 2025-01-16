@@ -5,52 +5,61 @@ import { model, models, Schema } from 'mongoose';
 // and throw an exception: "Cannot overwrite model once compiled Mongoose".
 // Find a fix by checking first if the model is already present in the mongoose models, and otherwise creating it.
 // https://stackoverflow.com/questions/19051041/cannot-overwrite-model-once-compiled-mongoose
-export const ClaimModel = models.Claim || model<Claim>('Claim', new Schema<Claim>({
-    createdAt: {
-        type: Date,
-        default: () => Date.now(),
-        immutable: true
-    },
-    content: {
-        type: String,
-        required: true
-    },
-    messages: [{
-        content: {
-            type: String,
-            required: true
-        },
-        createdAt: {
-            type: Date,
-            default: () => Date.now(),
-            immutable: true
-        },
-        author: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        }
-    }],
-    tags: [String],
-    title: {
-        type: String,
-        required: true
-    },
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    votes: [{
-        createdAt: {
-            type: Date,
-            default: () => Date.now(),
-            immutable: true
-        },
-        author: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        }
-    }]
-}));
+export const ClaimModel =
+    models.Claim ||
+    model<Claim>(
+        'Claim',
+        new Schema<Claim>({
+            createdAt: {
+                type: Date,
+                default: () => Date.now(),
+                immutable: true,
+            },
+            content: {
+                type: String,
+                required: true,
+            },
+            messages: [
+                {
+                    content: {
+                        type: String,
+                        required: true,
+                    },
+                    createdAt: {
+                        type: Date,
+                        default: () => Date.now(),
+                        immutable: true,
+                    },
+                    author: {
+                        type: Schema.Types.ObjectId,
+                        ref: 'User',
+                        required: true,
+                    },
+                },
+            ],
+            tags: [String],
+            title: {
+                type: String,
+                required: true,
+            },
+            author: {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+                required: true,
+            },
+            votes: [
+                {
+                    createdAt: {
+                        type: Date,
+                        default: () => Date.now(),
+                        immutable: true,
+                    },
+                    author: {
+                        type: Schema.Types.ObjectId,
+                        ref: 'User',
+                        required: true,
+                    },
+                },
+            ],
+        })
+    );

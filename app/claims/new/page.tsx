@@ -7,7 +7,7 @@ import { useActionState } from 'react';
 
 const Page = () => {
     const [state, action, isPending] = useActionState(createClaim, {
-        success: false
+        success: false,
     });
 
     return (
@@ -23,6 +23,6 @@ const Page = () => {
             </Card>
         </div>
     );
-}
+};
 
 export default Page;

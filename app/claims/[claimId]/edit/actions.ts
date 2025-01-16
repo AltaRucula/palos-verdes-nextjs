@@ -10,34 +10,33 @@ type EditClaimStatePayload = {
     claimAuthorId: string;
     claimId: string;
     savedFormData: ClaimFormData;
-}
+};
 
 export const editClaim = async (
     actionState: ActionState<EditClaimStatePayload>,
     formData: FormData
 ): Promise<ActionState<EditClaimStatePayload>> => {
-
     const currentSession = await getSession();
 
     if (!currentSession) {
         return {
             errors: 'Invalid user session',
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!actionState.payload) {
         return {
             errors: 'Invalid payload',
-            success: false
-        }
+            success: false,
+        };
     }
 
-    if (actionState.payload.claimAuthorId !== currentSession?.userId as string) {
+    if (actionState.payload.claimAuthorId !== (currentSession?.userId as string)) {
         return {
             errors: 'You are not allowed to edit this claim',
-            success: false
-        }
+            success: false,
+        };
     }
 
     const title = formData.get('title') as string;
@@ -48,18 +47,18 @@ export const editClaim = async (
     const savedFormData = {
         title,
         content,
-        tags
-    }
+        tags,
+    };
 
     if (!title) {
         return {
             errors: 'Title is required',
             payload: {
                 ...actionState.payload,
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!content) {
@@ -67,10 +66,10 @@ export const editClaim = async (
             errors: 'Content is required',
             payload: {
                 ...actionState.payload,
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!tags || tags.length === 0) {
@@ -78,10 +77,10 @@ export const editClaim = async (
             errors: 'At least one tag is required',
             payload: {
                 ...actionState.payload,
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     const claim = await claims.updateClaim(actionState.payload.claimId, savedFormData);
@@ -89,9 +88,9 @@ export const editClaim = async (
     if (!claim) {
         return {
             errors: 'Error editing claim',
-            success: false
-        }
+            success: false,
+        };
     }
 
     redirect(`/claims/${claim.id}`);
-}
+};

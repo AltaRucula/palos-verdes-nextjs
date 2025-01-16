@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 import * as claims from '@/lib/claims';
 import { getSession } from '@/lib/session';
@@ -8,20 +8,19 @@ import { redirect } from 'next/navigation';
 
 type CreateClaimStatePayload = {
     savedFormData: ClaimFormData;
-}
+};
 
 export const createClaim = async (
     actionState: ActionState<CreateClaimStatePayload>,
     formData: FormData
 ): Promise<ActionState<CreateClaimStatePayload>> => {
-
     const currentSession = await getSession();
 
     if (!currentSession) {
         return {
             errors: 'Invalid user session',
-            success: false
-        }
+            success: false,
+        };
     }
 
     const title = formData.get('title') as string;
@@ -32,50 +31,50 @@ export const createClaim = async (
     const savedFormData: ClaimFormData = {
         title,
         content,
-        tags
-    }
+        tags,
+    };
 
     if (!title) {
         return {
             errors: 'Title is required',
             payload: {
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!content) {
         return {
             errors: 'Content is required',
             payload: {
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!tags || tags.length === 0) {
         return {
             errors: 'At least one tag is required',
             payload: {
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     const newClaim = await claims.createClaim({
         ...savedFormData,
-        author: currentSession?.userId as string
-    })
+        author: currentSession?.userId as string,
+    });
 
     if (!newClaim) {
         return {
             errors: 'Error creating claim',
-            success: false
-        }
+            success: false,
+        };
     }
 
     return redirect('/claims');
-}
+};

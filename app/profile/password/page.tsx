@@ -10,16 +10,16 @@ const Page: React.FC = async () => {
     if (!userId) {
         return (
             <div className="mx-auto">
-                <UserNotLoggedIn/>
+                <UserNotLoggedIn />
             </div>
-        )
+        );
     }
 
     return (
         <div className="mx-auto">
-            <ChangePasswordForm userId={userId}/>
+            <ChangePasswordForm userId={userId} />
         </div>
-    )
-}
+    );
+};
 
 export default Page;

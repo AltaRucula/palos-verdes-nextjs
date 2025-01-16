@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { login } from '@/app/login/actions';
 import { Button } from '@/components/Button';
@@ -8,11 +8,14 @@ import { useActionState } from 'react';
 
 export const LoginForm = () => {
     const [state, action, isPending] = useActionState(login, {
-        success: false
+        success: false,
     });
 
     return (
-        <form action={action} className="flex flex-col items-center p-10">
+        <form
+            action={action}
+            className="flex flex-col items-center p-10"
+        >
             <Input
                 defaultValue={state.payload?.savedFormData.email}
                 disabled={isPending}
@@ -38,7 +41,12 @@ export const LoginForm = () => {
                 {isPending ? 'Working' : 'Login'}
             </Button>
 
-            <p className="mt-6">Do you need to create an account? <Link href="/signup"><Button>Signup</Button></Link></p>
+            <p className="mt-6">
+                Do you need to create an account?{' '}
+                <Link href="/signup">
+                    <Button>Signup</Button>
+                </Link>
+            </p>
         </form>
-    )
-}
+    );
+};

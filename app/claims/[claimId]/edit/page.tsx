@@ -7,24 +7,24 @@ import React, { Suspense } from 'react';
 
 type ClaimProps = {
     claimId: string;
-}
+};
 
-const Claim: React.FC<ClaimProps> = async ({claimId}) => {
+const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
     const claim = await findClaim(claimId);
     if (!claim) {
-        return <Error/>
+        return <Error />;
     }
 
     const currentSession = await getSession();
-    const currentSessionUserId = currentSession?.userId as string
+    const currentSessionUserId = currentSession?.userId as string;
     const isClaimOwnedByUser = claim.author.id === currentSessionUserId;
 
     if (!isClaimOwnedByUser) {
         return (
             <div>
-                <Error text="You do not have permission to edit this claim"/>
+                <Error text="You do not have permission to edit this claim" />
             </div>
-        )
+        );
     }
 
     return (
@@ -33,31 +33,30 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
             formData={{
                 title: claim.title,
                 content: claim.content,
-                tags: claim.tags
+                tags: claim.tags,
             }}
             claimId={claim.id}
         />
-    )
-}
+    );
+};
 
 type Props = {
     params: Promise<{
         claimId: string;
     }>;
-}
+};
 
-const Page: React.FC<Props> = async ({params}) => {
+const Page: React.FC<Props> = async ({ params }) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
-    const {claimId} = await params;
-
+    const { claimId } = await params;
 
     return (
         <div className="flex-auto">
-            <Suspense fallback={<LoadingSkeleton/>}>
-                <Claim claimId={claimId}/>
+            <Suspense fallback={<LoadingSkeleton />}>
+                <Claim claimId={claimId} />
             </Suspense>
         </div>
-    )
-}
+    );
+};
 
 export default Page;

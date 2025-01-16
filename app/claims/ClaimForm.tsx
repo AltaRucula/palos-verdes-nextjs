@@ -10,13 +10,13 @@ import { ClaimFormData } from '@/types/claim';
 import React, { useState } from 'react';
 
 type Props = {
-    action: (formData: FormData) => (void | Promise<void>);
+    action: (formData: FormData) => void | Promise<void>;
     errors?: string;
-    initialValues?: ClaimFormData,
+    initialValues?: ClaimFormData;
     isPending: boolean;
-}
+};
 
-export const ClaimForm: React.FC<Props> = ({action, errors, initialValues, isPending}) => {
+export const ClaimForm: React.FC<Props> = ({ action, errors, initialValues, isPending }) => {
     const [selectedTags, setSelectedTags] = useState<string[]>(initialValues?.tags ?? []);
     const [showModal, setShowModal] = useState(false);
 
@@ -40,13 +40,18 @@ export const ClaimForm: React.FC<Props> = ({action, errors, initialValues, isPen
             />
 
             <section className="flex flex-wrap mt-4">
-                <input name="tags" type="hidden" value={selectedTags}/>
+                <input
+                    name="tags"
+                    type="hidden"
+                    value={selectedTags}
+                />
                 {TAGS.map((tag, index) => (
                     <Tag
                         className={`cursor-pointer 
                         hover:bg-secondary-light dark:hover:bg-secondary-dark 
-                        ${selectedTags.includes(tag) &&
-                        '!bg-highlight-light hover:!bg-highlight-hover-light dark:!bg-highlight-dark dark:hover:!bg-highlight-hover-dark'
+                        ${
+                            selectedTags.includes(tag) &&
+                            '!bg-highlight-light hover:!bg-highlight-hover-light dark:!bg-highlight-dark dark:hover:!bg-highlight-hover-dark'
                         }`}
                         key={index}
                         onClick={() => {
@@ -55,11 +60,14 @@ export const ClaimForm: React.FC<Props> = ({action, errors, initialValues, isPen
                             }
 
                             if (selectedTags.includes(tag)) {
-                                setSelectedTags((prevState => prevState.filter(t => t !== tag)));
+                                setSelectedTags((prevState) => prevState.filter((t) => t !== tag));
                                 return;
                             }
-                            setSelectedTags((prevState => [...prevState, tag]))
-                        }}>{tag}</Tag>
+                            setSelectedTags((prevState) => [...prevState, tag]);
+                        }}
+                    >
+                        {tag}
+                    </Tag>
                 ))}
             </section>
 
@@ -78,7 +86,7 @@ export const ClaimForm: React.FC<Props> = ({action, errors, initialValues, isPen
             <Modal
                 title="Claim"
                 body="Are you sure you want to save this claim?"
-                footer={(
+                footer={
                     <div className="flex gap-2 justify-end mt-2">
                         <Button
                             disabled={isPending}
@@ -94,10 +102,10 @@ export const ClaimForm: React.FC<Props> = ({action, errors, initialValues, isPen
                             {isPending ? 'Working' : 'Yes'}
                         </Button>
                     </div>
-                )}
+                }
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
             />
         </form>
     );
-}
+};

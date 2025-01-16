@@ -11,15 +11,15 @@ import React, { useActionState, useState } from 'react';
 type Props = {
     formData: ProfileEditFormData;
     userId: string;
-}
+};
 
-export const EditForm: React.FC<Props> = ({formData, userId}) => {
+export const EditForm: React.FC<Props> = ({ formData, userId }) => {
     const [state, action, isPending] = useActionState(editProfile, {
         success: false,
         payload: {
             savedFormData: formData,
-            userId
-        }
+            userId,
+        },
     });
     const [showModal, setShowModal] = useState(false);
 
@@ -71,7 +71,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                     <Modal
                         title="Profile"
                         body="Are you sure you want to save this data?"
-                        footer={(
+                        footer={
                             <div className="flex gap-2 justify-end mt-2">
                                 <Button
                                     disabled={isPending}
@@ -87,7 +87,7 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
                                     {isPending ? 'Working' : 'Yes'}
                                 </Button>
                             </div>
-                        )}
+                        }
                         isOpen={showModal}
                         onClose={() => setShowModal(false)}
                     />
@@ -95,4 +95,4 @@ export const EditForm: React.FC<Props> = ({formData, userId}) => {
             </Card>
         </div>
     );
-}
+};

@@ -7,10 +7,9 @@ const Page = () => {
             <h1 className="mb-4">Signup</h1>
 
             <Card>
-                <SignupForm/>
+                <SignupForm />
             </Card>
-
         </div>
     );
-}
+};
 export default Page;

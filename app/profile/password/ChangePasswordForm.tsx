@@ -9,14 +9,14 @@ import React, { useActionState, useState } from 'react';
 
 type Props = {
     userId: string;
-}
+};
 
-export const ChangePasswordForm: React.FC<Props> = ({userId}) => {
+export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
     const [state, action, isPending] = useActionState(changePassword, {
         success: false,
         payload: {
-            userId
-        }
+            userId,
+        },
     });
     const [showModal, setShowModal] = useState(false);
 
@@ -30,7 +30,8 @@ export const ChangePasswordForm: React.FC<Props> = ({userId}) => {
                     onSubmit={() => setShowModal(false)}
                 >
                     <Input
-                        disabled={isPending} name="currentPassword"
+                        disabled={isPending}
+                        name="currentPassword"
                         placeholder="Current Password"
                         size={30}
                         type="password"
@@ -65,7 +66,7 @@ export const ChangePasswordForm: React.FC<Props> = ({userId}) => {
                     <Modal
                         title="Claim"
                         body="Are you sure you want to save this claim?"
-                        footer={(
+                        footer={
                             <div className="flex gap-2 justify-end mt-2">
                                 <Button
                                     disabled={isPending}
@@ -81,7 +82,7 @@ export const ChangePasswordForm: React.FC<Props> = ({userId}) => {
                                     {isPending ? 'Working' : 'Yes'}
                                 </Button>
                             </div>
-                        )}
+                        }
                         isOpen={showModal}
                         onClose={() => setShowModal(false)}
                     />
@@ -89,4 +90,4 @@ export const ChangePasswordForm: React.FC<Props> = ({userId}) => {
             </Card>
         </div>
     );
-}
+};

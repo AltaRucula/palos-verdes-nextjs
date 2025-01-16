@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 import { createSession } from '@/lib/session';
 import { findUserByEmail } from '@/lib/users';
@@ -15,33 +15,32 @@ export const login = async (
     actionState: ActionState<LoginStatePayload>,
     formData: FormData
 ): Promise<ActionState<LoginStatePayload>> => {
-
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
     const savedFormData: LoginFormData = {
-        email
-    }
+        email,
+    };
 
     // 1. Validate fields
     if (!email) {
         return {
             errors: 'Email is required',
             payload: {
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!password) {
         return {
             errors: 'Password is required',
             payload: {
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     // 2. Find user
@@ -57,6 +56,6 @@ export const login = async (
 
     return {
         errors: 'User not found',
-        success: false
-    }
-}
+        success: false,
+    };
+};

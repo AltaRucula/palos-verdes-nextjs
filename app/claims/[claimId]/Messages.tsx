@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { submitMessage } from '@/app/claims/[claimId]/actions';
 import { Button } from '@/components/Button';
@@ -11,20 +11,23 @@ import React, { useActionState } from 'react';
 type Props = {
     claimId: string;
     messages: Message[];
-}
+};
 
-export const Messages: React.FC<Props> = ({claimId, messages}) => {
+export const Messages: React.FC<Props> = ({ claimId, messages }) => {
     const [state, action, isPending] = useActionState(submitMessage, {
         success: false,
         payload: {
             claimId: claimId,
-            messages: messages
-        }
+            messages: messages,
+        },
     });
 
     return (
         <Card>
-            <form action={action} className=" flex flex-col">
+            <form
+                action={action}
+                className=" flex flex-col"
+            >
                 <TextArea
                     disabled={isPending}
                     name="message"
@@ -33,7 +36,8 @@ export const Messages: React.FC<Props> = ({claimId, messages}) => {
                 <Button
                     // className="min-w-72"
                     disabled={isPending}
-                    type="submit">
+                    type="submit"
+                >
                     {isPending ? 'Working' : 'Send'}
                 </Button>
             </form>
@@ -44,10 +48,11 @@ export const Messages: React.FC<Props> = ({claimId, messages}) => {
                 {state.payload?.messages?.map((message, index) => (
                     <div
                         className="border-t border-dotted border-tertiary-light dark:border-tertiary-dark py-4"
-                        key={index}>
+                        key={index}
+                    >
                         {message.content}
                         <div className="text-xs">
-                            {`Created ${formatDistanceToNow(message.createdAt, {addSuffix: true})} by ${message.author.firstName}`}
+                            {`Created ${formatDistanceToNow(message.createdAt, { addSuffix: true })} by ${message.author.firstName}`}
                         </div>
                     </div>
                 ))}
@@ -55,5 +60,5 @@ export const Messages: React.FC<Props> = ({claimId, messages}) => {
                 {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
             </div>
         </Card>
-    )
-}
+    );
+};

@@ -8,5 +8,5 @@ export const TAGS = [
     'maintenance',
     'parks',
     'children',
-    'water'
-]
+    'water',
+];

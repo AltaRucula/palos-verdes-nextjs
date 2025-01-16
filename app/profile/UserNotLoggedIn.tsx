@@ -8,5 +8,5 @@ export const UserNotLoggedIn = () => {
                 <Link href="/login">Click here to be redirected to login page</Link>
             </div>
         </div>
-    )
-}
+    );
+};

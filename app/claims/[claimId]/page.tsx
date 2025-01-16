@@ -14,32 +14,39 @@ import React, { Suspense } from 'react';
 
 type ClaimProps = {
     claimId: string;
-}
+};
 
-const Claim: React.FC<ClaimProps> = async ({claimId}) => {
+const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
     const claim = await findClaim(claimId);
     if (!claim) {
-        return <Error/>
+        return <Error />;
     }
 
     const currentSession = await getSession();
-    const currentSessionUserId = currentSession?.userId as string
+    const currentSessionUserId = currentSession?.userId as string;
     const isClaimOwnedByUser = claim.author.id === currentSessionUserId;
-    const isClaimAlreadyVotedByUser = claim.votes?.map(vote => vote.author.id).includes(currentSessionUserId);
+    const isClaimAlreadyVotedByUser = claim.votes?.map((vote) => vote.author.id).includes(currentSessionUserId);
 
     return (
         <div>
             <section className="flex flex-row justify-between items-center">
                 <h1>{claim.title}</h1>
                 <div className="flex flex-column gap-4">
-                    {isClaimOwnedByUser && <Link href={`/claims/${claim.id}/edit`}><Button>Edit</Button></Link>}
-                    {isClaimOwnedByUser && <DeleteButton claimId={claim.id} userId={claim.author.id}/>}
+                    {isClaimOwnedByUser && (
+                        <Link href={`/claims/${claim.id}/edit`}>
+                            <Button>Edit</Button>
+                        </Link>
+                    )}
+                    {isClaimOwnedByUser && (
+                        <DeleteButton
+                            claimId={claim.id}
+                            userId={claim.author.id}
+                        />
+                    )}
                 </div>
             </section>
             <Card>
-                <section className="mt-4 ">
-                    {claim.content}
-                </section>
+                <section className="mt-4 ">{claim.content}</section>
                 <section className="mt-4 text-sm">
                     <Votes
                         claimId={claim.id}
@@ -48,7 +55,7 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
                     />
                 </section>
                 <section className="mt-4 text-xs">
-                    {`Created ${formatDistanceToNow(claim.createdAt, {addSuffix: true})} by ${claim.author.firstName}`}
+                    {`Created ${formatDistanceToNow(claim.createdAt, { addSuffix: true })} by ${claim.author.firstName}`}
                 </section>
                 <section className="flex flex-wrap mt-4">
                     {claim.tags.map((tag, index) => (
@@ -61,29 +68,31 @@ const Claim: React.FC<ClaimProps> = async ({claimId}) => {
 
             {/*Need to serialize the data to be able to send it to the client component*/}
             {/*https://github.com/vercel/next.js/discussions/46137#discussioncomment-5047095*/}
-            <Messages claimId={claim.id} messages={JSON.parse(JSON.stringify(claim.messages))}/>
+            <Messages
+                claimId={claim.id}
+                messages={JSON.parse(JSON.stringify(claim.messages))}
+            />
         </div>
-    )
-}
+    );
+};
 
 type Props = {
     params: Promise<{
         claimId: string;
     }>;
-}
+};
 
-const Page: React.FC<Props> = async ({params}) => {
+const Page: React.FC<Props> = async ({ params }) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
-    const {claimId} = await params;
-
+    const { claimId } = await params;
 
     return (
         <div className="flex-auto">
-            <Suspense fallback={<LoadingSkeleton/>}>
-                <Claim claimId={claimId}/>
+            <Suspense fallback={<LoadingSkeleton />}>
+                <Claim claimId={claimId} />
             </Suspense>
         </div>
-    )
-}
+    );
+};
 
 export default Page;

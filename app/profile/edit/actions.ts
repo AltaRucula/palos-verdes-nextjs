@@ -9,27 +9,26 @@ import { redirect } from 'next/navigation';
 type EditClaimStatePayload = {
     savedFormData: ProfileEditFormData;
     userId: string;
-}
+};
 
 export const editProfile = async (
     actionState: ActionState<EditClaimStatePayload>,
     formData: FormData
 ): Promise<ActionState<EditClaimStatePayload>> => {
-
     const currentSession = await getSession();
 
     if (!currentSession) {
         return {
             errors: 'Invalid user session',
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!actionState.payload) {
         return {
             errors: 'Invalid payload',
-            success: false
-        }
+            success: false,
+        };
     }
 
     const email = formData.get('email') as string;
@@ -39,18 +38,18 @@ export const editProfile = async (
     const savedFormData = {
         email,
         firstName,
-        lastName
-    }
+        lastName,
+    };
 
     if (!email) {
         return {
             errors: 'Email is required',
             payload: {
                 ...actionState.payload,
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!firstName) {
@@ -58,10 +57,10 @@ export const editProfile = async (
             errors: 'First Name is required',
             payload: {
                 ...actionState.payload,
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     if (!lastName) {
@@ -69,10 +68,10 @@ export const editProfile = async (
             errors: 'Last Name is required',
             payload: {
                 ...actionState.payload,
-                savedFormData
+                savedFormData,
             },
-            success: false
-        }
+            success: false,
+        };
     }
 
     const user = await users.updateUser(actionState.payload.userId, savedFormData);
@@ -80,9 +79,9 @@ export const editProfile = async (
     if (!user) {
         return {
             errors: 'Error editing profile',
-            success: false
-        }
+            success: false,
+        };
     }
 
     redirect(`/profile`);
-}
+};

@@ -8,15 +8,15 @@ import React, { useActionState, useEffect, useState } from 'react';
 type Props = {
     claimId: string;
     userId: string;
-}
+};
 
-export const DeleteButton: React.FC<Props> = ({claimId, userId}) => {
+export const DeleteButton: React.FC<Props> = ({ claimId, userId }) => {
     const [state, action, isPending] = useActionState(deleteClaim, {
         success: false,
         payload: {
             claimId,
-            userId
-        }
+            userId,
+        },
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -24,29 +24,32 @@ export const DeleteButton: React.FC<Props> = ({claimId, userId}) => {
         if (state.success) {
             setIsModalOpen(false);
         }
-    }, [
-        state.success
-    ])
+    }, [state.success]);
 
     return (
         <div>
             <Modal
                 title="Delete this claim"
                 body="Are you sure you want to delete this claim? This action cannot be undone."
-                footer={(
-                    <form action={action} className="flex gap-2 justify-end mt-2">
+                footer={
+                    <form
+                        action={action}
+                        className="flex gap-2 justify-end mt-2"
+                    >
                         <Button
                             disabled={isPending}
-                            onClick={() => setIsModalOpen(false)}>
+                            onClick={() => setIsModalOpen(false)}
+                        >
                             {isPending ? 'Working' : 'No'}
                         </Button>
                         <Button
                             disabled={isPending}
-                            type="submit">
+                            type="submit"
+                        >
                             {isPending ? 'Working' : 'Yes'}
                         </Button>
                     </form>
-                )}
+                }
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
@@ -54,10 +57,10 @@ export const DeleteButton: React.FC<Props> = ({claimId, userId}) => {
             <Button
                 disabled={isPending}
                 type="submit"
-                onClick={() => setIsModalOpen(true)}>
+                onClick={() => setIsModalOpen(true)}
+            >
                 {isPending ? 'Working' : 'Delete'}
             </Button>
-
         </div>
-    )
-}
+    );
+};
