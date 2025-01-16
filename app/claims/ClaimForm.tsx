@@ -7,14 +7,16 @@ import { Modal } from '@/components/Modal';
 import { Tag } from '@/components/Tag';
 import { TextArea } from '@/components/TextArea';
 import { TAGS } from '@/lib/constants';
-import { ClaimFormData } from '@/types/claims';
-import React, { FormEvent, startTransition, useRef, useState } from 'react';
+import { claimSchema } from '@/schemas/claims';
+import { ClaimFormFields } from '@/types/claims';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React, { FormEvent, startTransition, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type Props = {
     action: (formData: FormData) => void | Promise<void>;
-    serverErrors?: string;
-    initialValues?: ClaimFormData;
+    serverErrors?: string | string[];
+    initialValues?: ClaimFormFields;
     isPending: boolean;
 };
 
@@ -29,10 +31,18 @@ export const ClaimForm: React.FC<Props> = ({ action, serverErrors, initialValues
         register,
         handleSubmit,
         formState: { errors: clientErrors, isValid },
+        setValue,
     } = useForm({
         defaultValues: initialValues,
         mode: 'onTouched',
+        resolver: zodResolver(claimSchema),
     });
+
+    useEffect(() => {
+        setValue('tags', selectedTags, {
+            shouldValidate: true,
+        });
+    }, [selectedTags, setValue]);
 
     return (
         <div>
@@ -46,9 +56,7 @@ export const ClaimForm: React.FC<Props> = ({ action, serverErrors, initialValues
                 ref={formRef}
             >
                 <Input
-                    {...register('title', {
-                        required: 'Title is required',
-                    })}
+                    {...register('title')}
                     disabled={isPending}
                     error={clientErrors.title?.message as string}
                     placeholder="Title"
@@ -56,49 +64,45 @@ export const ClaimForm: React.FC<Props> = ({ action, serverErrors, initialValues
                     type="text"
                 />
                 <TextArea
-                    {...register('content', {
-                        required: 'Content is required',
-                    })}
+                    {...register('content')}
                     disabled={isPending}
                     error={clientErrors.content?.message as string}
                     placeholder="Type your message"
                 />
 
-                <section className="flex flex-wrap mt-4">
+                <section>
                     <input
-                        {...register('tags', {
-                            minLength: {
-                                value: 1,
-                                message: 'At least one tag is required',
-                            },
-                        })}
+                        {...register('tags')}
                         type="hidden"
                         value={selectedTags}
                     />
-                    {TAGS.map((tag, index) => (
-                        <Tag
-                            className={`cursor-pointer 
+
+                    <div className="flex flex-wrap mt-4">
+                        {TAGS.map((tag, index) => (
+                            <Tag
+                                className={`cursor-pointer 
                         hover:bg-secondary-light dark:hover:bg-secondary-dark 
                         ${
                             selectedTags.includes(tag) &&
                             '!bg-highlight-light hover:!bg-highlight-hover-light dark:!bg-highlight-dark dark:hover:!bg-highlight-hover-dark'
                         }`}
-                            key={index}
-                            onClick={() => {
-                                if (isPending) {
-                                    return;
-                                }
+                                key={index}
+                                onClick={() => {
+                                    if (isPending) {
+                                        return;
+                                    }
 
-                                if (selectedTags.includes(tag)) {
-                                    setSelectedTags((prevState) => prevState.filter((t) => t !== tag));
-                                    return;
-                                }
-                                setSelectedTags((prevState) => [...prevState, tag]);
-                            }}
-                        >
-                            {tag}
-                        </Tag>
-                    ))}
+                                    if (selectedTags.includes(tag)) {
+                                        setSelectedTags((prevState) => prevState.filter((t) => t !== tag));
+                                        return;
+                                    }
+                                    setSelectedTags((prevState) => [...prevState, tag]);
+                                }}
+                            >
+                                {tag}
+                            </Tag>
+                        ))}
+                    </div>
                     {clientErrors.tags?.message && <ErrorField>{clientErrors.tags?.message as string}</ErrorField>}
                 </section>
 

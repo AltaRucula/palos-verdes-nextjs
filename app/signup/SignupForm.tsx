@@ -4,12 +4,14 @@ import { signup } from '@/actions/users';
 import { Button } from '@/components/Button';
 import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
+import { signupSchema } from '@/schemas/users';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { startTransition, useActionState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const SignupForm = () => {
-    const [state, action, isPending] = useActionState(signup, {});
+    const [{ errors: serverErrors }, action, isPending] = useActionState(signup, {});
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -19,6 +21,7 @@ export const SignupForm = () => {
         formState: { errors: clientErrors, isValid },
     } = useForm({
         mode: 'onTouched',
+        resolver: zodResolver(signupSchema),
     });
 
     return (
@@ -34,9 +37,7 @@ export const SignupForm = () => {
             ref={formRef}
         >
             <Input
-                {...register('firstName', {
-                    required: 'First name is required',
-                })}
+                {...register('firstName')}
                 disabled={isPending}
                 error={clientErrors.firstName?.message as string}
                 placeholder="First name"
@@ -44,9 +45,7 @@ export const SignupForm = () => {
                 size={30}
             />
             <Input
-                {...register('lastName', {
-                    required: 'Last name is required',
-                })}
+                {...register('lastName')}
                 disabled={isPending}
                 error={clientErrors.lastName?.message as string}
                 placeholder="Last name"
@@ -54,9 +53,7 @@ export const SignupForm = () => {
                 size={30}
             />
             <Input
-                {...register('email', {
-                    required: 'Email is required',
-                })}
+                {...register('email')}
                 disabled={isPending}
                 error={clientErrors.email?.message as string}
                 placeholder="Email"
@@ -64,9 +61,7 @@ export const SignupForm = () => {
                 size={30}
             />
             <Input
-                {...register('password', {
-                    required: 'Password is required',
-                })}
+                {...register('password')}
                 disabled={isPending}
                 error={clientErrors.password?.message as string}
                 placeholder="Password"
@@ -81,7 +76,7 @@ export const SignupForm = () => {
                 {isPending ? 'Working' : 'Signup'}
             </Button>
 
-            {state.errors && <ErrorField>{state.errors}</ErrorField>}
+            {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
 
             <p className="mt-6">
                 Already have an account?{' '}

@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const DeleteButton: React.FC<Props> = ({ claimId, userId }) => {
-    const [state, action, isPending] = useActionState(deleteClaim, {
+    const [{ errors: serverErrors }, action, isPending] = useActionState(deleteClaim, {
         claimId,
         userId,
     });
@@ -29,7 +29,7 @@ export const DeleteButton: React.FC<Props> = ({ claimId, userId }) => {
                 {isPending ? 'Working' : 'Delete'}
             </Button>
 
-            {state.errors && <ErrorField>{state.errors}</ErrorField>}
+            {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
 
             <Modal
                 title="Delete this claim"

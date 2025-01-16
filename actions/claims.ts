@@ -1,16 +1,17 @@
 'use server';
 
+import { getClaimFormData, getErrors } from '@/actions/utils';
 import * as claims from '@/lib/claims';
-import { addMessage, addVote } from '@/lib/claims';
+import { addVote } from '@/lib/claims';
 import { getSession } from '@/lib/session';
+import { claimSchema, messageSchema } from '@/schemas/claims';
 import { ActionState, TypedActionState } from '@/types/actionState';
-import { ClaimFormData, Message } from '@/types/claims';
+import { Message } from '@/types/claims';
 import { redirect } from 'next/navigation';
 
 type EditClaimPayload = {
     claimAuthorId: string;
     claimId: string;
-    initialValues: ClaimFormData;
 };
 
 type DeleteClaimStatePayload = {
@@ -33,36 +34,19 @@ export const createClaim = async (actionState: ActionState, formData: FormData):
         };
     }
 
-    const title = formData.get('title') as string;
-    const content = formData.get('content') as string;
-    const rawTags = formData.get('tags') as string;
-    const tags = rawTags.length > 0 ? rawTags.split(',') : [];
+    const data = getClaimFormData(formData);
 
-    if (!title) {
+    try {
+        claimSchema.parse(data);
+    } catch (e) {
         return {
             ...actionState,
-            errors: 'Title is required',
-        };
-    }
-
-    if (!content) {
-        return {
-            ...actionState,
-            errors: 'Content is required',
-        };
-    }
-
-    if (!tags || tags.length === 0) {
-        return {
-            ...actionState,
-            errors: 'At least one tag is required',
+            errors: getErrors(e),
         };
     }
 
     const newClaim = await claims.createClaim({
-        title,
-        content,
-        tags,
+        ...data,
         author: currentSession?.userId as string,
     });
 
@@ -96,37 +80,18 @@ export const editClaim = async (
         };
     }
 
-    const title = formData.get('title') as string;
-    const content = formData.get('content') as string;
-    const rawTags = formData.get('tags') as string;
-    const tags = rawTags.length > 0 ? rawTags.split(',') : [];
+    const data = getClaimFormData(formData);
 
-    if (!title) {
+    try {
+        claimSchema.parse(data);
+    } catch (e) {
         return {
             ...actionState,
-            errors: 'Title is required',
+            errors: getErrors(e),
         };
     }
 
-    if (!content) {
-        return {
-            ...actionState,
-            errors: 'Content is required',
-        };
-    }
-
-    if (!tags || tags.length === 0) {
-        return {
-            ...actionState,
-            errors: 'At least one tag is required',
-        };
-    }
-
-    const claim = await claims.updateClaim(actionState.claimId, {
-        title,
-        content,
-        tags,
-    });
+    const claim = await claims.updateClaim(actionState.claimId, data);
 
     if (!claim) {
         return {
@@ -183,14 +148,19 @@ export const submitMessage = async (
     }
 
     const message = formData.get('message') as string;
-    if (!message) {
+
+    try {
+        messageSchema.parse({
+            message,
+        });
+    } catch (e) {
         return {
             ...actionState,
-            errors: 'Message is required',
+            errors: getErrors(e),
         };
     }
 
-    const updatedClaim = await addMessage(actionState.claimId, {
+    const updatedClaim = await claims.addMessage(actionState.claimId, {
         content: message,
         author: currentSession?.userId as string,
     });

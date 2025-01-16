@@ -9,10 +9,6 @@ export const LoadingSkeleton = () => {
                 <h1>
                     <div className="bg-secondary-light dark:bg-secondary-dark rounded-full h-6 w-96" />
                 </h1>
-                <div className="flex flex-column gap-4">
-                    <Button disabled={true}>Edit</Button>
-                    <Button disabled={true}>Delete</Button>
-                </div>
             </section>
             <Card>
                 <section className="mt-6 ">

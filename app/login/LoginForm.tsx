@@ -4,12 +4,14 @@ import { login } from '@/actions/users';
 import { Button } from '@/components/Button';
 import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
+import { loginSchema } from '@/schemas/users';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { startTransition, useActionState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const LoginForm = () => {
-    const [state, action, isPending] = useActionState(login, {});
+    const [{ errors: serverErrors }, action, isPending] = useActionState(login, {});
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -19,6 +21,7 @@ export const LoginForm = () => {
         formState: { errors: clientErrors, isValid },
     } = useForm({
         mode: 'onTouched',
+        resolver: zodResolver(loginSchema),
     });
 
     return (
@@ -34,9 +37,7 @@ export const LoginForm = () => {
             ref={formRef}
         >
             <Input
-                {...register('email', {
-                    required: 'Email is required',
-                })}
+                {...register('email')}
                 disabled={isPending}
                 error={clientErrors.email?.message as string}
                 placeholder="Email"
@@ -45,9 +46,7 @@ export const LoginForm = () => {
             />
 
             <Input
-                {...register('password', {
-                    required: 'Password is required',
-                })}
+                {...register('password')}
                 disabled={isPending}
                 error={clientErrors.password?.message as string}
                 placeholder="Password"
@@ -62,7 +61,7 @@ export const LoginForm = () => {
                 {isPending ? 'Working' : 'Login'}
             </Button>
 
-            {state.errors && <ErrorField>{state.errors}</ErrorField>}
+            {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
 
             <p className="mt-6">
                 Do you need to create an account?{' '}

@@ -6,17 +6,19 @@ import { Card } from '@/components/Card';
 import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
-import { ProfileEditFormData } from '@/types/users';
+import { profileSchema } from '@/schemas/users';
+import { ProfileFormFields } from '@/types/users';
+import { zodResolver } from '@hookform/resolvers/zod';
 import React, { FormEvent, startTransition, useActionState, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type Props = {
-    initialValues: ProfileEditFormData;
+    initialValues: ProfileFormFields;
     userId: string;
 };
 
 export const EditForm: React.FC<Props> = ({ initialValues, userId }) => {
-    const [state, action, isPending] = useActionState(editProfile, {
+    const [{ errors: serverErrors }, action, isPending] = useActionState(editProfile, {
         userId,
     });
 
@@ -31,6 +33,7 @@ export const EditForm: React.FC<Props> = ({ initialValues, userId }) => {
     } = useForm({
         defaultValues: initialValues,
         mode: 'onTouched',
+        resolver: zodResolver(profileSchema),
     });
 
     return (
@@ -47,9 +50,7 @@ export const EditForm: React.FC<Props> = ({ initialValues, userId }) => {
                     ref={formRef}
                 >
                     <Input
-                        {...register('firstName', {
-                            required: 'First name is required',
-                        })}
+                        {...register('firstName')}
                         disabled={isPending}
                         error={clientErrors.firstName?.message as string}
                         placeholder="First name"
@@ -57,9 +58,7 @@ export const EditForm: React.FC<Props> = ({ initialValues, userId }) => {
                         type="text"
                     />
                     <Input
-                        {...register('lastName', {
-                            required: 'Last name is required',
-                        })}
+                        {...register('lastName')}
                         disabled={isPending}
                         error={clientErrors.lastName?.message as string}
                         placeholder="Last name"
@@ -67,9 +66,7 @@ export const EditForm: React.FC<Props> = ({ initialValues, userId }) => {
                         type="text"
                     />
                     <Input
-                        {...register('email', {
-                            required: 'Email is required',
-                        })}
+                        {...register('email')}
                         disabled={isPending}
                         error={clientErrors.email?.message as string}
                         placeholder="Email"
@@ -84,7 +81,7 @@ export const EditForm: React.FC<Props> = ({ initialValues, userId }) => {
                         {isPending ? 'Working' : 'Save'}
                     </Button>
 
-                    {state.errors && <ErrorField>{state.errors}</ErrorField>}
+                    {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
                 </form>
             </Card>
 

@@ -1,7 +1,7 @@
 export type TypedActionState<T> = {
-    errors?: string;
+    errors?: string | string[];
 } & T;
 
 export type ActionState = {
-    errors?: string;
+    errors?: string | string[];
 };

@@ -1,9 +1,11 @@
 'use server';
 
+import { getErrors } from '@/actions/utils';
 import { PASSWORD_SALT_OR_ROUND } from '@/lib/env';
 import { createSession, deleteSession, getSession } from '@/lib/session';
 import * as users from '@/lib/users';
 import { createUser, findUser, findUserByEmail } from '@/lib/users';
+import { loginSchema, passwordSchema, profileSchema, signupSchema } from '@/schemas/users';
 import { ActionState, TypedActionState } from '@/types/actionState';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
@@ -34,24 +36,16 @@ export const changePassword = async (
     const newPassword = formData.get('newPassword') as string;
     const newPasswordConfirmation = formData.get('newPasswordConfirmation') as string;
 
-    if (!currentPassword) {
+    try {
+        passwordSchema.parse({
+            currentPassword,
+            newPassword,
+            newPasswordConfirmation,
+        });
+    } catch (e) {
         return {
             ...actionState,
-            errors: 'Current password is required',
-        };
-    }
-
-    if (!newPassword) {
-        return {
-            ...actionState,
-            errors: 'New password is required',
-        };
-    }
-
-    if (!newPasswordConfirmation || newPasswordConfirmation !== newPassword) {
-        return {
-            ...actionState,
-            errors: 'Passwords do not match',
+            errors: getErrors(e),
         };
     }
 
@@ -104,34 +98,22 @@ export const editProfile = async (
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
 
-    const savedFormData = {
+    const data = {
         email,
         firstName,
         lastName,
     };
 
-    if (!email) {
+    try {
+        profileSchema.parse(data);
+    } catch (e) {
         return {
             ...actionState,
-            errors: 'Email is required',
+            errors: getErrors(e),
         };
     }
 
-    if (!firstName) {
-        return {
-            ...actionState,
-            errors: 'First Name is required',
-        };
-    }
-
-    if (!lastName) {
-        return {
-            ...actionState,
-            errors: 'Last Name is required',
-        };
-    }
-
-    const user = await users.updateUser(actionState.userId, savedFormData);
+    const user = await users.updateUser(actionState.userId, data);
 
     if (!user) {
         return {
@@ -147,29 +129,22 @@ export const login = async (actionState: ActionState, formData: FormData): Promi
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    // 1. Validate fields
-    if (!email) {
+    try {
+        loginSchema.parse({
+            email,
+            password,
+        });
+    } catch (e) {
         return {
             ...actionState,
-            errors: 'Email is required',
+            errors: getErrors(e),
         };
     }
 
-    if (!password) {
-        return {
-            ...actionState,
-            errors: 'Password is required',
-        };
-    }
-
-    // 2. Find user
     const user = await findUserByEmail(email);
 
-    // 3. Verify password hash
     if (user && user.password && bcrypt.compareSync(password, user.password)) {
-        // 4. Create session
         await createSession(user.id);
-
         return redirect('/');
     }
 
@@ -181,7 +156,6 @@ export const login = async (actionState: ActionState, formData: FormData): Promi
 
 export const logout = async (): Promise<ActionState> => {
     await deleteSession();
-
     return redirect('/');
 };
 
@@ -191,40 +165,26 @@ export const signup = async (actionState: ActionState, formData: FormData): Prom
     const lastName = formData.get('lastName') as string;
     const password = formData.get('password') as string;
 
-    if (!firstName) {
-        return {
-            ...actionState,
-            errors: 'First name is required',
-        };
-    }
+    const data = {
+        email,
+        firstName,
+        lastName,
+        password,
+    };
 
-    if (!lastName) {
+    try {
+        signupSchema.parse(data);
+    } catch (e) {
         return {
             ...actionState,
-            errors: 'Last name is required',
-        };
-    }
-
-    if (!email) {
-        return {
-            ...actionState,
-            errors: 'Email is required',
-        };
-    }
-
-    if (!password) {
-        return {
-            ...actionState,
-            errors: 'Password is required',
+            errors: getErrors(e),
         };
     }
 
     const hashedPassword = bcrypt.hashSync(password, PASSWORD_SALT_OR_ROUND);
 
     const user = await createUser({
-        email,
-        firstName,
-        lastName,
+        ...data,
         password: hashedPassword,
     });
 

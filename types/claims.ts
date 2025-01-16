@@ -1,4 +1,6 @@
+import { claimSchema } from '@/schemas/claims';
 import { Users } from '@/types/users';
+import { z } from 'zod';
 
 export type Claims = {
     id: string;
@@ -40,8 +42,4 @@ export type NewVote = {
     author: string;
 };
 
-export type ClaimFormData = {
-    title: string;
-    content: string;
-    tags: string[];
-};
+export type ClaimFormFields = z.infer<typeof claimSchema>;

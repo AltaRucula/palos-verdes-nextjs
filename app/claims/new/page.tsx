@@ -6,7 +6,7 @@ import { Card } from '@/components/Card';
 import { useActionState } from 'react';
 
 const Page = () => {
-    const [state, action, isPending] = useActionState(createClaim, {});
+    const [{ errors: serverErrors }, action, isPending] = useActionState(createClaim, {});
 
     return (
         <div className="flex-auto">
@@ -14,7 +14,7 @@ const Page = () => {
             <Card>
                 <ClaimForm
                     action={action}
-                    serverErrors={state.errors}
+                    serverErrors={serverErrors}
                     isPending={isPending}
                 />
             </Card>

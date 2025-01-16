@@ -6,6 +6,8 @@ import { Card } from '@/components/Card';
 import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
+import { passwordSchema } from '@/schemas/users';
+import { zodResolver } from '@hookform/resolvers/zod';
 import React, { FormEvent, startTransition, useActionState, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -14,7 +16,7 @@ type Props = {
 };
 
 export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
-    const [state, action, isPending] = useActionState(changePassword, {
+    const [{ errors: serverErrors }, action, isPending] = useActionState(changePassword, {
         userId,
     });
 
@@ -28,6 +30,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
         formState: { errors: clientErrors, isValid },
     } = useForm({
         mode: 'onTouched',
+        resolver: zodResolver(passwordSchema),
     });
 
     return (
@@ -44,9 +47,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
                     ref={formRef}
                 >
                     <Input
-                        {...register('currentPassword', {
-                            required: 'Current password is required',
-                        })}
+                        {...register('currentPassword')}
                         disabled={isPending}
                         error={clientErrors.currentPassword?.message as string}
                         placeholder="Current Password"
@@ -54,9 +55,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
                         type="password"
                     />
                     <Input
-                        {...register('newPassword', {
-                            required: 'New password is required',
-                        })}
+                        {...register('newPassword')}
                         disabled={isPending}
                         error={clientErrors.newPassword?.message as string}
                         placeholder="New Password"
@@ -64,9 +63,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
                         type="password"
                     />
                     <Input
-                        {...register('newPasswordConfirmation', {
-                            required: 'New password confirmation is required',
-                        })}
+                        {...register('newPasswordConfirmation')}
                         disabled={isPending}
                         error={clientErrors.newPasswordConfirmation?.message as string}
                         placeholder="Confirm New Password"
@@ -81,7 +78,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
                         {isPending ? 'Working' : 'Save'}
                     </Button>
 
-                    {state.errors && <ErrorField>{state.errors}</ErrorField>}
+                    {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
                 </form>
             </Card>
 

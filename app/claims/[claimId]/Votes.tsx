@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const Votes: React.FC<Props> = ({ claimId, isClaimAlreadyVotedByUser, votes }) => {
-    const [state, action, isPending] = useActionState(voteClaim, {
+    const [{ errors: serverErrors, ...state }, action, isPending] = useActionState(voteClaim, {
         claimId: claimId,
         isClaimAlreadyVotedByUser: isClaimAlreadyVotedByUser ?? false,
         votes: votes ?? 0,
@@ -30,7 +30,7 @@ export const Votes: React.FC<Props> = ({ claimId, isClaimAlreadyVotedByUser, vot
                     {isPending ? 'Working' : 'Vote'}
                 </Button>
 
-                {state.errors && <ErrorField>{state.errors}</ErrorField>}
+                {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
             </form>
         </div>
     );

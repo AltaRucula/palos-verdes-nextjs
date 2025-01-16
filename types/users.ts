@@ -1,3 +1,6 @@
+import { profileSchema } from '@/schemas/users';
+import { z } from 'zod';
+
 export type NewUser = {
     email: string;
     firstName: string;
@@ -14,8 +17,4 @@ export type Users = {
     password: string;
 };
 
-export type ProfileEditFormData = {
-    email: string;
-    firstName: string;
-    lastName: string;
-};
+export type ProfileFormFields = z.infer<typeof profileSchema>;

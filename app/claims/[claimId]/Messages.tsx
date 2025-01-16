@@ -5,9 +5,11 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { ErrorField } from '@/components/ErrorField';
 import { TextArea } from '@/components/TextArea';
+import { messageSchema } from '@/schemas/claims';
 import { Message } from '@/types/claims';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { formatDistanceToNow } from 'date-fns';
-import React, { startTransition, useActionState, useRef } from 'react';
+import React, { startTransition, useActionState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 type Props = {
@@ -16,7 +18,7 @@ type Props = {
 };
 
 export const Messages: React.FC<Props> = ({ claimId, messages }) => {
-    const [state, action, isPending] = useActionState(submitMessage, {
+    const [{ errors: serverErrors, ...state }, action, isPending] = useActionState(submitMessage, {
         claimId: claimId,
         messages: messages,
     });
@@ -27,9 +29,18 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
         register,
         handleSubmit,
         formState: { errors: clientErrors, isValid },
+        reset,
     } = useForm({
         mode: 'onTouched',
+        resolver: zodResolver(messageSchema),
     });
+    
+    useEffect(() => {
+        // After sending the message, wait to see if there are errors before erasing the message text area
+        if (!isPending && !serverErrors) {
+            reset();
+        }
+    }, [isPending, reset, serverErrors]);
 
     return (
         <Card>
@@ -38,14 +49,12 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
                 className="flex flex-col"
                 onSubmit={(evt) => {
                     evt.preventDefault();
-                    handleSubmit(() => startTransition(() => action(new FormData(formRef.current!))))(evt);
+                    handleSubmit(() => startTransition(async () => action(new FormData(formRef.current!))))(evt);
                 }}
                 ref={formRef}
             >
                 <TextArea
-                    {...register('message', {
-                        required: 'Message is required',
-                    })}
+                    {...register('message')}
                     disabled={isPending}
                     error={clientErrors.message?.message as string}
                     placeholder="Type your message"
@@ -57,7 +66,7 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
                     {isPending ? 'Working' : 'Send'}
                 </Button>
 
-                {state.errors && <ErrorField>{state.errors}</ErrorField>}
+                {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
             </form>
 
             <div className="mt-8">
