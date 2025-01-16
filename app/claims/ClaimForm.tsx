@@ -1,88 +1,118 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
 import { Tag } from '@/components/Tag';
 import { TextArea } from '@/components/TextArea';
 import { TAGS } from '@/lib/constants';
 import { ClaimFormData } from '@/types/claim';
-import React, { useState } from 'react';
+import React, { FormEvent, startTransition, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 type Props = {
     action: (formData: FormData) => void | Promise<void>;
-    errors?: string;
+    serverErrors?: string;
     initialValues?: ClaimFormData;
     isPending: boolean;
 };
 
-export const ClaimForm: React.FC<Props> = ({ action, errors, initialValues, isPending }) => {
+export const ClaimForm: React.FC<Props> = ({ action, serverErrors, initialValues, isPending }) => {
     const [selectedTags, setSelectedTags] = useState<string[]>(initialValues?.tags ?? []);
-    const [showModal, setShowModal] = useState(false);
+
+    const [formEvent, setFormEvent] = useState<FormEvent<HTMLFormElement> | null>(null);
+
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors: clientErrors, isValid },
+    } = useForm({
+        mode: 'onTouched',
+    });
 
     return (
-        <form
-            action={action}
-            className="flex flex-col"
-            onSubmit={() => setShowModal(false)}
-        >
-            <Input
-                defaultValue={initialValues?.title}
-                disabled={isPending}
-                name="title"
-                placeholder="Title"
-            />
-            <TextArea
-                defaultValue={initialValues?.content}
-                disabled={isPending}
-                name="content"
-                placeholder="Type your message"
-            />
-
-            <section className="flex flex-wrap mt-4">
-                <input
-                    name="tags"
-                    type="hidden"
-                    value={selectedTags}
+        <div>
+            <form
+                action={action}
+                className="flex flex-col"
+                onSubmit={(evt) => {
+                    evt.preventDefault();
+                    setFormEvent(evt);
+                }}
+                ref={formRef}
+            >
+                <Input
+                    {...register('title', {
+                        required: 'Title is required',
+                    })}
+                    defaultValue={initialValues?.title}
+                    disabled={isPending}
+                    error={clientErrors.title?.message as string}
+                    placeholder="Title"
+                    size={60}
+                    type="text"
                 />
-                {TAGS.map((tag, index) => (
-                    <Tag
-                        className={`cursor-pointer 
+                <TextArea
+                    {...register('content', {
+                        required: 'Content is required',
+                    })}
+                    defaultValue={initialValues?.content}
+                    disabled={isPending}
+                    error={clientErrors.content?.message as string}
+                    placeholder="Type your message"
+                />
+
+                <section className="flex flex-wrap mt-4">
+                    <input
+                        {...register('tags', {
+                            minLength: {
+                                value: 1,
+                                message: 'At least one tag is required',
+                            },
+                        })}
+                        type="hidden"
+                        value={selectedTags}
+                    />
+                    {TAGS.map((tag, index) => (
+                        <Tag
+                            className={`cursor-pointer 
                         hover:bg-secondary-light dark:hover:bg-secondary-dark 
                         ${
                             selectedTags.includes(tag) &&
                             '!bg-highlight-light hover:!bg-highlight-hover-light dark:!bg-highlight-dark dark:hover:!bg-highlight-hover-dark'
                         }`}
-                        key={index}
-                        onClick={() => {
-                            if (isPending) {
-                                return;
-                            }
+                            key={index}
+                            onClick={() => {
+                                if (isPending) {
+                                    return;
+                                }
 
-                            if (selectedTags.includes(tag)) {
-                                setSelectedTags((prevState) => prevState.filter((t) => t !== tag));
-                                return;
-                            }
-                            setSelectedTags((prevState) => [...prevState, tag]);
-                        }}
-                    >
-                        {tag}
-                    </Tag>
-                ))}
-            </section>
+                                if (selectedTags.includes(tag)) {
+                                    setSelectedTags((prevState) => prevState.filter((t) => t !== tag));
+                                    return;
+                                }
+                                setSelectedTags((prevState) => [...prevState, tag]);
+                            }}
+                        >
+                            {tag}
+                        </Tag>
+                    ))}
+                    {clientErrors.tags?.message && <ErrorField>{clientErrors.tags?.message as string}</ErrorField>}
+                </section>
 
-            {errors && <p className="text-error-light dark:text-error-dark">{errors}</p>}
+                <Button
+                    disabled={!isValid || isPending}
+                    type="submit"
+                >
+                    {isPending ? 'Working' : 'Save'}
+                </Button>
 
-            <Button
-                disabled={isPending}
-                onClick={() => setShowModal(true)}
-                type="button"
-            >
-                {isPending ? 'Working' : 'Save'}
-            </Button>
+                {serverErrors && <ErrorField>{serverErrors}</ErrorField>}
+            </form>
 
-            {/* Have to include the modal in the form so that the YES button from the modal can*/}
-            {/* submit the form using the action function from the useActionState hook */}
             <Modal
                 title="Claim"
                 body="Are you sure you want to save this claim?"
@@ -90,22 +120,29 @@ export const ClaimForm: React.FC<Props> = ({ action, errors, initialValues, isPe
                     <div className="flex gap-2 justify-end mt-2">
                         <Button
                             disabled={isPending}
-                            onClick={() => setShowModal(false)}
+                            onClick={() => setFormEvent(null)}
                             type="button"
                         >
                             {isPending ? 'Working' : 'No'}
                         </Button>
                         <Button
                             disabled={isPending}
-                            type="submit"
+                            onClick={() =>
+                                formEvent &&
+                                handleSubmit(() => {
+                                    setFormEvent(null);
+                                    startTransition(() => action(new FormData(formRef.current!)));
+                                })(formEvent)
+                            }
+                            type="button"
                         >
                             {isPending ? 'Working' : 'Yes'}
                         </Button>
                     </div>
                 }
-                isOpen={showModal}
-                onClose={() => setShowModal(false)}
+                isOpen={!!formEvent}
+                onClose={() => setFormEvent(null)}
             />
-        </form>
+        </div>
     );
 };

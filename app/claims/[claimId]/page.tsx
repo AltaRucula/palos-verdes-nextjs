@@ -4,7 +4,7 @@ import { Messages } from '@/app/claims/[claimId]/Messages';
 import { Votes } from '@/app/claims/[claimId]/Votes';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Error } from '@/components/Error';
+import { GeneralError } from '@/components/GeneralError';
 import { Tag } from '@/components/Tag';
 import { findClaim } from '@/lib/claims';
 import { getSession } from '@/lib/session';
@@ -19,7 +19,7 @@ type ClaimProps = {
 const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
     const claim = await findClaim(claimId);
     if (!claim) {
-        return <Error />;
+        return <GeneralError />;
     }
 
     const currentSession = await getSession();

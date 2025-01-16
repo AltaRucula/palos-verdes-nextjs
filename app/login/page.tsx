@@ -1,6 +1,6 @@
 import { LoginForm } from '@/app/login/LoginForm';
 import { Card } from '@/components/Card';
-import { Error } from '@/components/Error';
+import { GeneralError } from '@/components/GeneralError';
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
     const isForbidden = (await searchParams).forbidden;
@@ -11,7 +11,7 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ [key: string]: s
 
             <Card>
                 {isForbidden ? (
-                    <Error text={'You need to be logged in to access certain functionalities of this site'} />
+                    <GeneralError text={'You need to be logged in to access certain functionalities of this site'} />
                 ) : null}
                 <LoginForm />
             </Card>

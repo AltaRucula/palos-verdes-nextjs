@@ -40,7 +40,6 @@ export const LoadingSkeleton = () => {
                     <textarea
                         disabled={true}
                         className="bg-secondary-light dark:bg-secondary-dark border-0 mx-auto p-4 min-w-full rounded-md resize-none"
-                        name="message"
                         placeholder="Type your message"
                         rows={3}
                     />

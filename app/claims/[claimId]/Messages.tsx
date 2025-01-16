@@ -3,10 +3,12 @@
 import { submitMessage } from '@/app/claims/[claimId]/actions';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { ErrorField } from '@/components/ErrorField';
 import { TextArea } from '@/components/TextArea';
 import { Message } from '@/types/claim';
 import { formatDistanceToNow } from 'date-fns';
-import React, { useActionState } from 'react';
+import React, { startTransition, useActionState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 
 type Props = {
     claimId: string;
@@ -22,24 +24,43 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
         },
     });
 
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors: clientErrors, isValid },
+    } = useForm({
+        mode: 'onTouched',
+    });
+
     return (
         <Card>
             <form
                 action={action}
-                className=" flex flex-col"
+                className="flex flex-col"
+                onSubmit={(evt) => {
+                    evt.preventDefault();
+                    handleSubmit(() => startTransition(() => action(new FormData(formRef.current!))))(evt);
+                }}
+                ref={formRef}
             >
                 <TextArea
+                    {...register('message', {
+                        required: 'Message is required',
+                    })}
                     disabled={isPending}
-                    name="message"
+                    error={clientErrors.message?.message as string}
                     placeholder="Type your message"
                 />
                 <Button
-                    // className="min-w-72"
-                    disabled={isPending}
+                    disabled={!isValid || isPending}
                     type="submit"
                 >
                     {isPending ? 'Working' : 'Send'}
                 </Button>
+
+                {state.errors && <ErrorField>{state.errors}</ErrorField>}
             </form>
 
             <div className="mt-8">
@@ -56,8 +77,6 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
                         </div>
                     </div>
                 ))}
-
-                {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
             </div>
         </Card>
     );

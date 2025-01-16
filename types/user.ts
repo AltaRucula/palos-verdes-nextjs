@@ -17,7 +17,7 @@ export type User = {
 export type ChangePasswordFormData = {
     currentPassword: string;
     newPassword: string;
-    confirmNewPassword: string;
+    newPasswordConfirmation: string;
 };
 
 export type LoginFormData = {

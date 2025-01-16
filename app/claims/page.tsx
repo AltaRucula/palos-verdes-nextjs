@@ -1,7 +1,7 @@
 import { LoadingSkeleton } from '@/app/claims/LoadingSkeleton';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Error } from '@/components/Error';
+import { GeneralError } from '@/components/GeneralError';
 import { Tag } from '@/components/Tag';
 import { findClaims } from '@/lib/claims';
 import { formatDistanceToNow } from 'date-fns';
@@ -11,7 +11,7 @@ import { Suspense } from 'react';
 const Claims = async () => {
     const claims = await findClaims();
     if (!claims) {
-        return <Error />;
+        return <GeneralError />;
     }
 
     if (claims.length === 0)

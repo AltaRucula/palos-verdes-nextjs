@@ -35,7 +35,7 @@ export const changePassword = async (
 
     const currentPassword = formData.get('currentPassword') as string;
     const newPassword = formData.get('newPassword') as string;
-    const confirmNewPassword = formData.get('confirmNewPassword') as string;
+    const newPasswordConfirmation = formData.get('newPasswordConfirmation') as string;
 
     if (!currentPassword) {
         return {
@@ -57,7 +57,7 @@ export const changePassword = async (
         };
     }
 
-    if (!confirmNewPassword || confirmNewPassword !== newPassword) {
+    if (!newPasswordConfirmation || newPasswordConfirmation !== newPassword) {
         return {
             errors: 'Passwords do not match',
             payload: {

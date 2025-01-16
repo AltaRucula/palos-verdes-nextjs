@@ -3,10 +3,12 @@
 import { editProfile } from '@/app/profile/edit/actions';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
 import { ProfileEditFormData } from '@/types/user';
-import React, { useActionState, useState } from 'react';
+import React, { FormEvent, startTransition, useActionState, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 type Props = {
     formData: ProfileEditFormData;
@@ -21,7 +23,18 @@ export const EditForm: React.FC<Props> = ({ formData, userId }) => {
             userId,
         },
     });
-    const [showModal, setShowModal] = useState(false);
+
+    const [formEvent, setFormEvent] = useState<FormEvent<HTMLFormElement> | null>(null);
+
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors: clientErrors, isValid },
+    } = useForm({
+        mode: 'onTouched',
+    });
 
     return (
         <div className="flex-auto">
@@ -30,69 +43,87 @@ export const EditForm: React.FC<Props> = ({ formData, userId }) => {
                 <form
                     action={action}
                     className="flex flex-col items-center p-8"
-                    onSubmit={() => setShowModal(false)}
+                    onSubmit={(evt) => {
+                        evt.preventDefault();
+                        setFormEvent(evt);
+                    }}
+                    ref={formRef}
                 >
                     <Input
+                        {...register('firstName', {
+                            required: 'First name is required',
+                        })}
                         defaultValue={state.payload?.savedFormData.firstName}
                         disabled={isPending}
-                        name="firstName"
-                        type="text"
+                        error={clientErrors.firstName?.message as string}
                         placeholder="First name"
                         size={30}
+                        type="text"
                     />
                     <Input
+                        {...register('lastName', {
+                            required: 'Last name is required',
+                        })}
                         defaultValue={state.payload?.savedFormData.lastName}
                         disabled={isPending}
-                        name="lastName"
-                        type="text"
+                        error={clientErrors.lastName?.message as string}
                         placeholder="Last name"
                         size={30}
+                        type="text"
                     />
                     <Input
+                        {...register('email', {
+                            required: 'Email is required',
+                        })}
                         defaultValue={state.payload?.savedFormData.email}
                         disabled={isPending}
-                        name="email"
-                        type="text"
+                        error={clientErrors.email?.message as string}
                         placeholder="Email"
                         size={30}
+                        type="text"
                     />
-                    {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
 
                     <Button
-                        disabled={isPending}
-                        onClick={() => setShowModal(true)}
-                        type="button"
+                        disabled={!isValid || isPending}
+                        type="submit"
                     >
                         {isPending ? 'Working' : 'Save'}
                     </Button>
 
-                    {/* Have to include the modal in the form so that the YES button from the modal can*/}
-                    {/* submit the form using the action function from the useActionState hook */}
-                    <Modal
-                        title="Profile"
-                        body="Are you sure you want to save this data?"
-                        footer={
-                            <div className="flex gap-2 justify-end mt-2">
-                                <Button
-                                    disabled={isPending}
-                                    onClick={() => setShowModal(false)}
-                                    type="button"
-                                >
-                                    {isPending ? 'Working' : 'No'}
-                                </Button>
-                                <Button
-                                    disabled={isPending}
-                                    type="submit"
-                                >
-                                    {isPending ? 'Working' : 'Yes'}
-                                </Button>
-                            </div>
-                        }
-                        isOpen={showModal}
-                        onClose={() => setShowModal(false)}
-                    />
+                    {state.errors && <ErrorField>{state.errors}</ErrorField>}
                 </form>
             </Card>
+
+            <Modal
+                title="Profile"
+                body="Are you sure you want to save this data?"
+                footer={
+                    <div className="flex gap-2 justify-end mt-2">
+                        <Button
+                            disabled={isPending}
+                            onClick={() => setFormEvent(null)}
+                            type="button"
+                        >
+                            {isPending ? 'Working' : 'No'}
+                        </Button>
+                        <Button
+                            disabled={isPending}
+                            onClick={() =>
+                                formEvent &&
+                                handleSubmit(() => {
+                                    setFormEvent(null);
+                                    startTransition(() => action(new FormData(formRef.current!)));
+                                })(formEvent)
+                            }
+                            type="button"
+                        >
+                            {isPending ? 'Working' : 'Yes'}
+                        </Button>
+                    </div>
+                }
+                isOpen={!!formEvent}
+                onClose={() => setFormEvent(null)}
+            />
         </div>
     );
 };

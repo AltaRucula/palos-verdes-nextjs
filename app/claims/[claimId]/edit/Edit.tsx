@@ -28,7 +28,7 @@ export const Edit: React.FC<Props> = ({ claimAuthorId, claimId, formData }) => {
             <Card>
                 <ClaimForm
                     action={action}
-                    errors={state.errors}
+                    serverErrors={state.errors}
                     initialValues={state.payload?.savedFormData}
                     isPending={isPending}
                 />

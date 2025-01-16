@@ -61,6 +61,7 @@ export const submitMessage = async (
 ): Promise<ActionState<SubmitMessageStatePayload>> => {
     if (!actionState.payload) {
         return {
+            payload: actionState.payload,
             errors: 'Invalid payload',
             success: false,
         };
@@ -69,6 +70,7 @@ export const submitMessage = async (
     const message = formData.get('message') as string;
     if (!message) {
         return {
+            payload: actionState.payload,
             errors: 'Message is required',
             success: false,
         };
@@ -78,6 +80,7 @@ export const submitMessage = async (
 
     if (!currentSession) {
         return {
+            payload: actionState.payload,
             errors: 'Invalid user session',
             success: false,
         };
@@ -90,6 +93,7 @@ export const submitMessage = async (
 
     if (!updatedClaim)
         return {
+            payload: actionState.payload,
             errors: 'Error adding message to the claim',
             success: false,
         };

@@ -2,44 +2,70 @@
 
 import { login } from '@/app/login/actions';
 import { Button } from '@/components/Button';
+import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { startTransition, useActionState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 
 export const LoginForm = () => {
     const [state, action, isPending] = useActionState(login, {
         success: false,
     });
 
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors: clientErrors, isValid },
+    } = useForm({
+        mode: 'onTouched',
+    });
+
     return (
         <form
             action={action}
             className="flex flex-col items-center p-10"
+            onSubmit={(evt) => {
+                evt.preventDefault();
+                handleSubmit(() => {
+                    startTransition(() => action(new FormData(formRef.current!)));
+                })(evt);
+            }}
+            ref={formRef}
         >
             <Input
+                {...register('email', {
+                    required: 'Email is required',
+                })}
                 defaultValue={state.payload?.savedFormData.email}
                 disabled={isPending}
-                name="email"
-                type="text"
+                error={clientErrors.email?.message as string}
                 placeholder="Email"
                 size={30}
+                type="text"
             />
+
             <Input
+                {...register('password', {
+                    required: 'Password is required',
+                })}
                 disabled={isPending}
-                name="password"
-                type="password"
+                error={clientErrors.password?.message as string}
                 placeholder="Password"
                 size={30}
+                type="password"
             />
 
-            {state.errors && <p className="text-error-light dark:text-error-dark">{state.errors}</p>}
-
             <Button
-                disabled={isPending}
+                disabled={!isValid || isPending}
                 type="submit"
             >
                 {isPending ? 'Working' : 'Login'}
             </Button>
+
+            {state.errors && <ErrorField>{state.errors}</ErrorField>}
 
             <p className="mt-6">
                 Do you need to create an account?{' '}

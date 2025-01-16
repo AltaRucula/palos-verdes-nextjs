@@ -4,7 +4,7 @@ type Props = {
     text?: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-export const Error = (props: Props) => {
+export const GeneralError = (props: Props) => {
     return (
         <div
             {...{

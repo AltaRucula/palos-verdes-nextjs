@@ -8,13 +8,13 @@ import { useEffect, useState } from 'react';
 
 const DarkMode = () => {
     const [isDarkTheme, setIsDarkTheme] = useState(
-        localStorage.theme === 'dark' ||
+        localStorage?.theme === 'dark' ||
             (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
     );
 
     useEffect(() => {
         document.documentElement.classList.toggle('dark', isDarkTheme);
-        localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+        localStorage?.setItem('theme', isDarkTheme ? 'dark' : 'light');
     }, [isDarkTheme]);
 
     return (

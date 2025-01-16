@@ -16,7 +16,7 @@ const Page = () => {
             <Card>
                 <ClaimForm
                     action={action}
-                    errors={state.errors}
+                    serverErrors={state.errors}
                     initialValues={state.payload?.savedFormData}
                     isPending={isPending}
                 />

@@ -1,6 +1,6 @@
 import { Edit } from '@/app/claims/[claimId]/edit/Edit';
 import { LoadingSkeleton } from '@/app/claims/[claimId]/edit/LoadingSkeleton';
-import { Error } from '@/components/Error';
+import { GeneralError } from '@/components/GeneralError';
 import { findClaim } from '@/lib/claims';
 import { getSession } from '@/lib/session';
 import React, { Suspense } from 'react';
@@ -12,7 +12,7 @@ type ClaimProps = {
 const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
     const claim = await findClaim(claimId);
     if (!claim) {
-        return <Error />;
+        return <GeneralError />;
     }
 
     const currentSession = await getSession();
@@ -22,7 +22,7 @@ const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
     if (!isClaimOwnedByUser) {
         return (
             <div>
-                <Error text="You do not have permission to edit this claim" />
+                <GeneralError text="You do not have permission to edit this claim" />
             </div>
         );
     }
