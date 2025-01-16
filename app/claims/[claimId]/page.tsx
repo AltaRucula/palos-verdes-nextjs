@@ -4,12 +4,12 @@ import { Messages } from '@/app/claims/[claimId]/Messages';
 import { Votes } from '@/app/claims/[claimId]/Votes';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { GeneralError } from '@/components/GeneralError';
 import { Tag } from '@/components/Tag';
 import { findClaim } from '@/lib/claims';
 import { getSession } from '@/lib/session';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import React, { Suspense } from 'react';
 
 type ClaimProps = {
@@ -19,7 +19,7 @@ type ClaimProps = {
 const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
     const claim = await findClaim(claimId);
     if (!claim) {
-        return <GeneralError />;
+        return notFound();
     }
 
     const currentSession = await getSession();

@@ -1,9 +1,10 @@
 'use client';
 
-import { deleteClaim } from '@/app/claims/[claimId]/actions';
+import { deleteClaim } from '@/actions/claims';
 import { Button } from '@/components/Button';
+import { ErrorField } from '@/components/ErrorField';
 import { Modal } from '@/components/Modal';
-import React, { useActionState, useEffect, useState } from 'react';
+import React, { useActionState, useState } from 'react';
 
 type Props = {
     claimId: string;
@@ -12,22 +13,24 @@ type Props = {
 
 export const DeleteButton: React.FC<Props> = ({ claimId, userId }) => {
     const [state, action, isPending] = useActionState(deleteClaim, {
-        success: false,
-        payload: {
-            claimId,
-            userId,
-        },
+        claimId,
+        userId,
     });
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        if (state.success) {
-            setIsModalOpen(false);
-        }
-    }, [state.success]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <div>
+            <Button
+                disabled={isPending}
+                onClick={() => setIsModalOpen(true)}
+                type="button"
+            >
+                {isPending ? 'Working' : 'Delete'}
+            </Button>
+
+            {state.errors && <ErrorField>{state.errors}</ErrorField>}
+
             <Modal
                 title="Delete this claim"
                 body="Are you sure you want to delete this claim? This action cannot be undone."
@@ -39,6 +42,7 @@ export const DeleteButton: React.FC<Props> = ({ claimId, userId }) => {
                         <Button
                             disabled={isPending}
                             onClick={() => setIsModalOpen(false)}
+                            type="button"
                         >
                             {isPending ? 'Working' : 'No'}
                         </Button>
@@ -53,14 +57,6 @@ export const DeleteButton: React.FC<Props> = ({ claimId, userId }) => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
-
-            <Button
-                disabled={isPending}
-                type="submit"
-                onClick={() => setIsModalOpen(true)}
-            >
-                {isPending ? 'Working' : 'Delete'}
-            </Button>
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import { Claim } from '@/types/claim';
+import { Claims } from '@/types/claims';
 import { model, models, Schema } from 'mongoose';
 
 // For some reason while doing developing and modifying any code in the project, mongoose re compile the model(s)
@@ -7,9 +7,9 @@ import { model, models, Schema } from 'mongoose';
 // https://stackoverflow.com/questions/19051041/cannot-overwrite-model-once-compiled-mongoose
 export const ClaimModel =
     models.Claim ||
-    model<Claim>(
+    model<Claims>(
         'Claim',
-        new Schema<Claim>({
+        new Schema<Claims>({
             createdAt: {
                 type: Date,
                 default: () => Date.now(),

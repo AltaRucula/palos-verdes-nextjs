@@ -1,7 +1,6 @@
 import { LoadingSkeleton } from '@/app/claims/LoadingSkeleton';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { GeneralError } from '@/components/GeneralError';
 import { Tag } from '@/components/Tag';
 import { findClaims } from '@/lib/claims';
 import { formatDistanceToNow } from 'date-fns';
@@ -10,11 +9,8 @@ import { Suspense } from 'react';
 
 const Claims = async () => {
     const claims = await findClaims();
-    if (!claims) {
-        return <GeneralError />;
-    }
 
-    if (claims.length === 0)
+    if (!claims || claims.length === 0)
         return (
             <div className="flex flex-col items-center justify-center mt-12">
                 <h1 className="text-2xl">No claims yet</h1>

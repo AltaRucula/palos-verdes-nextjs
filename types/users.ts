@@ -5,29 +5,13 @@ export type NewUser = {
     password: string;
 };
 
-export type User = {
+export type Users = {
     id: string;
     createdAt: Date;
     email: string;
     firstName: string;
     lastName: string;
     password: string;
-};
-
-export type ChangePasswordFormData = {
-    currentPassword: string;
-    newPassword: string;
-    newPasswordConfirmation: string;
-};
-
-export type LoginFormData = {
-    email: string;
-};
-
-export type SignupFormData = {
-    email: string;
-    firstName: string;
-    lastName: string;
 };
 
 export type ProfileEditFormData = {

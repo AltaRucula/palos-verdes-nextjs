@@ -1,6 +1,6 @@
 'use client';
 
-import { changePassword } from '@/app/profile/password/actions';
+import { changePassword } from '@/actions/users';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { ErrorField } from '@/components/ErrorField';
@@ -15,10 +15,7 @@ type Props = {
 
 export const ChangePasswordForm: React.FC<Props> = ({ userId }) => {
     const [state, action, isPending] = useActionState(changePassword, {
-        success: false,
-        payload: {
-            userId,
-        },
+        userId,
     });
 
     const [formEvent, setFormEvent] = useState<FormEvent<HTMLFormElement> | null>(null);

@@ -1,14 +1,12 @@
 'use client';
 
+import { createClaim } from '@/actions/claims';
 import { ClaimForm } from '@/app/claims/ClaimForm';
-import { createClaim } from '@/app/claims/new/actions';
 import { Card } from '@/components/Card';
 import { useActionState } from 'react';
 
 const Page = () => {
-    const [state, action, isPending] = useActionState(createClaim, {
-        success: false,
-    });
+    const [state, action, isPending] = useActionState(createClaim, {});
 
     return (
         <div className="flex-auto">
@@ -17,7 +15,6 @@ const Page = () => {
                 <ClaimForm
                     action={action}
                     serverErrors={state.errors}
-                    initialValues={state.payload?.savedFormData}
                     isPending={isPending}
                 />
             </Card>

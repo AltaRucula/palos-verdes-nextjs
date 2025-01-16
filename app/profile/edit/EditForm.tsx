@@ -1,27 +1,23 @@
 'use client';
 
-import { editProfile } from '@/app/profile/edit/actions';
+import { editProfile } from '@/actions/users';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
 import { Modal } from '@/components/Modal';
-import { ProfileEditFormData } from '@/types/user';
+import { ProfileEditFormData } from '@/types/users';
 import React, { FormEvent, startTransition, useActionState, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type Props = {
-    formData: ProfileEditFormData;
+    initialValues: ProfileEditFormData;
     userId: string;
 };
 
-export const EditForm: React.FC<Props> = ({ formData, userId }) => {
+export const EditForm: React.FC<Props> = ({ initialValues, userId }) => {
     const [state, action, isPending] = useActionState(editProfile, {
-        success: false,
-        payload: {
-            savedFormData: formData,
-            userId,
-        },
+        userId,
     });
 
     const [formEvent, setFormEvent] = useState<FormEvent<HTMLFormElement> | null>(null);
@@ -33,6 +29,7 @@ export const EditForm: React.FC<Props> = ({ formData, userId }) => {
         handleSubmit,
         formState: { errors: clientErrors, isValid },
     } = useForm({
+        defaultValues: initialValues,
         mode: 'onTouched',
     });
 
@@ -53,7 +50,6 @@ export const EditForm: React.FC<Props> = ({ formData, userId }) => {
                         {...register('firstName', {
                             required: 'First name is required',
                         })}
-                        defaultValue={state.payload?.savedFormData.firstName}
                         disabled={isPending}
                         error={clientErrors.firstName?.message as string}
                         placeholder="First name"
@@ -64,7 +60,6 @@ export const EditForm: React.FC<Props> = ({ formData, userId }) => {
                         {...register('lastName', {
                             required: 'Last name is required',
                         })}
-                        defaultValue={state.payload?.savedFormData.lastName}
                         disabled={isPending}
                         error={clientErrors.lastName?.message as string}
                         placeholder="Last name"
@@ -75,7 +70,6 @@ export const EditForm: React.FC<Props> = ({ formData, userId }) => {
                         {...register('email', {
                             required: 'Email is required',
                         })}
-                        defaultValue={state.payload?.savedFormData.email}
                         disabled={isPending}
                         error={clientErrors.email?.message as string}
                         placeholder="Email"

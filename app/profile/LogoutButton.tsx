@@ -1,13 +1,11 @@
 'use client';
 
-import { logout } from '@/app/profile/actions';
+import { logout } from '@/actions/users';
 import { ButtonLink } from '@/components/ButtonLink';
 import { useActionState } from 'react';
 
 export const LogoutButton = () => {
-    const [state, action, isPending] = useActionState(logout, {
-        success: false,
-    });
+    const [, action, isPending] = useActionState(logout, {});
 
     return (
         <form action={action}>

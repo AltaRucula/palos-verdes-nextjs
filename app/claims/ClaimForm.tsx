@@ -7,7 +7,7 @@ import { Modal } from '@/components/Modal';
 import { Tag } from '@/components/Tag';
 import { TextArea } from '@/components/TextArea';
 import { TAGS } from '@/lib/constants';
-import { ClaimFormData } from '@/types/claim';
+import { ClaimFormData } from '@/types/claims';
 import React, { FormEvent, startTransition, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -30,6 +30,7 @@ export const ClaimForm: React.FC<Props> = ({ action, serverErrors, initialValues
         handleSubmit,
         formState: { errors: clientErrors, isValid },
     } = useForm({
+        defaultValues: initialValues,
         mode: 'onTouched',
     });
 
@@ -48,7 +49,6 @@ export const ClaimForm: React.FC<Props> = ({ action, serverErrors, initialValues
                     {...register('title', {
                         required: 'Title is required',
                     })}
-                    defaultValue={initialValues?.title}
                     disabled={isPending}
                     error={clientErrors.title?.message as string}
                     placeholder="Title"
@@ -59,7 +59,6 @@ export const ClaimForm: React.FC<Props> = ({ action, serverErrors, initialValues
                     {...register('content', {
                         required: 'Content is required',
                     })}
-                    defaultValue={initialValues?.content}
                     disabled={isPending}
                     error={clientErrors.content?.message as string}
                     placeholder="Type your message"

@@ -1,5 +1,7 @@
-export type ActionState<T> = {
+export type TypedActionState<T> = {
     errors?: string;
-    payload?: T;
-    success: boolean;
+} & T;
+
+export type ActionState = {
+    errors?: string;
 };

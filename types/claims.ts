@@ -1,13 +1,13 @@
-import { User } from '@/types/user';
+import { Users } from '@/types/users';
 
-export type Claim = {
+export type Claims = {
     id: string;
     createdAt: Date;
     content: string;
     messages: Message[];
     tags: string[];
     title: string;
-    author: User;
+    author: Users;
     votes: Vote[];
 };
 
@@ -15,13 +15,13 @@ export type Message = {
     id: string;
     content: string;
     createdAt: Date;
-    author: User;
+    author: Users;
 };
 
 export type Vote = {
     id: string;
     createdAt: Date;
-    author: User;
+    author: Users;
 };
 
 export type NewClaim = {

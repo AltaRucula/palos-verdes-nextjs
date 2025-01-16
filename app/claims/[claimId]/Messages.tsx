@@ -1,11 +1,11 @@
 'use client';
 
-import { submitMessage } from '@/app/claims/[claimId]/actions';
+import { submitMessage } from '@/actions/claims';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { ErrorField } from '@/components/ErrorField';
 import { TextArea } from '@/components/TextArea';
-import { Message } from '@/types/claim';
+import { Message } from '@/types/claims';
 import { formatDistanceToNow } from 'date-fns';
 import React, { startTransition, useActionState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,11 +17,8 @@ type Props = {
 
 export const Messages: React.FC<Props> = ({ claimId, messages }) => {
     const [state, action, isPending] = useActionState(submitMessage, {
-        success: false,
-        payload: {
-            claimId: claimId,
-            messages: messages,
-        },
+        claimId: claimId,
+        messages: messages,
     });
 
     const formRef = useRef<HTMLFormElement>(null);
@@ -64,9 +61,9 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
             </form>
 
             <div className="mt-8">
-                {state.payload?.messages?.length === 0 && <p className="mt-12">No messages yet</p>}
+                {state.messages?.length === 0 && <p className="mt-12">No messages yet</p>}
 
-                {state.payload?.messages?.map((message, index) => (
+                {state.messages?.map((message, index) => (
                     <div
                         className="border-t border-dotted border-tertiary-light dark:border-tertiary-dark py-4"
                         key={index}

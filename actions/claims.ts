@@ -1,0 +1,244 @@
+'use server';
+
+import * as claims from '@/lib/claims';
+import { addMessage, addVote } from '@/lib/claims';
+import { getSession } from '@/lib/session';
+import { ActionState, TypedActionState } from '@/types/actionState';
+import { ClaimFormData, Message } from '@/types/claims';
+import { redirect } from 'next/navigation';
+
+type EditClaimPayload = {
+    claimAuthorId: string;
+    claimId: string;
+    initialValues: ClaimFormData;
+};
+
+type DeleteClaimStatePayload = {
+    claimId: string;
+    userId: string;
+};
+
+type SubmitMessageStatePayload = {
+    claimId: string;
+    messages: Message[];
+};
+
+export const createClaim = async (actionState: ActionState, formData: FormData): Promise<ActionState> => {
+    const currentSession = await getSession();
+
+    if (!currentSession) {
+        return {
+            ...actionState,
+            errors: 'Invalid user session',
+        };
+    }
+
+    const title = formData.get('title') as string;
+    const content = formData.get('content') as string;
+    const rawTags = formData.get('tags') as string;
+    const tags = rawTags.length > 0 ? rawTags.split(',') : [];
+
+    if (!title) {
+        return {
+            ...actionState,
+            errors: 'Title is required',
+        };
+    }
+
+    if (!content) {
+        return {
+            ...actionState,
+            errors: 'Content is required',
+        };
+    }
+
+    if (!tags || tags.length === 0) {
+        return {
+            ...actionState,
+            errors: 'At least one tag is required',
+        };
+    }
+
+    const newClaim = await claims.createClaim({
+        title,
+        content,
+        tags,
+        author: currentSession?.userId as string,
+    });
+
+    if (!newClaim) {
+        return {
+            ...actionState,
+            errors: 'Error creating claim',
+        };
+    }
+
+    return redirect('/claims');
+};
+
+export const editClaim = async (
+    actionState: TypedActionState<EditClaimPayload>,
+    formData: FormData
+): Promise<TypedActionState<EditClaimPayload>> => {
+    const currentSession = await getSession();
+
+    if (!currentSession) {
+        return {
+            ...actionState,
+            errors: 'Invalid user session',
+        };
+    }
+
+    if (actionState.claimAuthorId !== (currentSession?.userId as string)) {
+        return {
+            ...actionState,
+            errors: 'You are not allowed to edit this claim',
+        };
+    }
+
+    const title = formData.get('title') as string;
+    const content = formData.get('content') as string;
+    const rawTags = formData.get('tags') as string;
+    const tags = rawTags.length > 0 ? rawTags.split(',') : [];
+
+    if (!title) {
+        return {
+            ...actionState,
+            errors: 'Title is required',
+        };
+    }
+
+    if (!content) {
+        return {
+            ...actionState,
+            errors: 'Content is required',
+        };
+    }
+
+    if (!tags || tags.length === 0) {
+        return {
+            ...actionState,
+            errors: 'At least one tag is required',
+        };
+    }
+
+    const claim = await claims.updateClaim(actionState.claimId, {
+        title,
+        content,
+        tags,
+    });
+
+    if (!claim) {
+        return {
+            ...actionState,
+            errors: 'Error editing claim',
+        };
+    }
+
+    redirect(`/claims/${claim.id}`);
+};
+
+export const deleteClaim = async (
+    actionState: TypedActionState<DeleteClaimStatePayload>
+): Promise<TypedActionState<DeleteClaimStatePayload>> => {
+    const currentSession = await getSession();
+
+    if (!currentSession) {
+        return {
+            ...actionState,
+            errors: 'Invalid user session',
+        };
+    }
+
+    if (actionState.userId !== (currentSession?.userId as string)) {
+        return {
+            ...actionState,
+            errors: 'You are not allowed to delete this claim',
+        };
+    }
+
+    const claim = await claims.deleteClaim(actionState.claimId);
+
+    if (!claim) {
+        return {
+            ...actionState,
+            errors: 'Error deleting claim',
+        };
+    }
+
+    redirect('/claims');
+};
+
+export const submitMessage = async (
+    actionState: TypedActionState<SubmitMessageStatePayload>,
+    formData: FormData
+): Promise<TypedActionState<SubmitMessageStatePayload>> => {
+    const currentSession = await getSession();
+
+    if (!currentSession) {
+        return {
+            ...actionState,
+            errors: 'Invalid user session',
+        };
+    }
+
+    const message = formData.get('message') as string;
+    if (!message) {
+        return {
+            ...actionState,
+            errors: 'Message is required',
+        };
+    }
+
+    const updatedClaim = await addMessage(actionState.claimId, {
+        content: message,
+        author: currentSession?.userId as string,
+    });
+
+    if (!updatedClaim)
+        return {
+            ...actionState,
+            errors: 'Error adding message to the claim',
+        };
+
+    return {
+        ...actionState,
+        messages: JSON.parse(JSON.stringify(updatedClaim.messages)),
+    };
+};
+
+type VoteClaimPayload = {
+    claimId: string;
+    isClaimAlreadyVotedByUser: boolean;
+    votes: number;
+};
+
+export const voteClaim = async (
+    actionState: TypedActionState<VoteClaimPayload>
+): Promise<TypedActionState<VoteClaimPayload>> => {
+    const currentSession = await getSession();
+
+    if (!currentSession) {
+        return {
+            ...actionState,
+            errors: 'Invalid user session',
+        };
+    }
+
+    const updatedClaim = await addVote(actionState.claimId, {
+        author: currentSession?.userId as string,
+    });
+
+    if (!updatedClaim) {
+        return {
+            ...actionState,
+            errors: 'Error adding vote to the claim',
+        };
+    }
+
+    return {
+        ...actionState,
+        isClaimAlreadyVotedByUser: true,
+        votes: updatedClaim.votes.length,
+    };
+};

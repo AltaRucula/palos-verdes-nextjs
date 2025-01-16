@@ -1,25 +1,22 @@
 'use client';
 
-import { editClaim } from '@/app/claims/[claimId]/edit/actions';
+import { editClaim } from '@/actions/claims';
 import { ClaimForm } from '@/app/claims/ClaimForm';
 import { Card } from '@/components/Card';
-import { ClaimFormData } from '@/types/claim';
+import { ClaimFormData } from '@/types/claims';
 import React, { useActionState } from 'react';
 
 type Props = {
     claimAuthorId: string;
     claimId: string;
-    formData: ClaimFormData;
+    initialValues: ClaimFormData;
 };
 
-export const Edit: React.FC<Props> = ({ claimAuthorId, claimId, formData }) => {
+export const Edit: React.FC<Props> = ({ claimAuthorId, claimId, initialValues }) => {
     const [state, action, isPending] = useActionState(editClaim, {
-        success: false,
-        payload: {
-            claimAuthorId,
-            savedFormData: formData,
-            claimId,
-        },
+        claimAuthorId,
+        initialValues: initialValues,
+        claimId,
     });
 
     return (
@@ -29,7 +26,7 @@ export const Edit: React.FC<Props> = ({ claimAuthorId, claimId, formData }) => {
                 <ClaimForm
                     action={action}
                     serverErrors={state.errors}
-                    initialValues={state.payload?.savedFormData}
+                    initialValues={state.initialValues}
                     isPending={isPending}
                 />
             </Card>

@@ -1,6 +1,6 @@
 import { EditForm } from '@/app/profile/edit/EditForm';
 import { LoadingSkeleton } from '@/app/profile/edit/LoadingSkeleton';
-import { UserNotLoggedIn } from '@/app/profile/UserNotLoggedIn';
+import { ForbiddenError } from '@/components/ForbiddenError';
 import { getSession } from '@/lib/session';
 import { findUser } from '@/lib/users';
 import React, { Suspense } from 'react';
@@ -14,12 +14,12 @@ const User: React.FC = async () => {
     }
 
     if (!user) {
-        return <UserNotLoggedIn />;
+        return <ForbiddenError />;
     }
 
     return (
         <EditForm
-            formData={{
+            initialValues={{
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,

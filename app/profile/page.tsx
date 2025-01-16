@@ -1,15 +1,15 @@
 import { LoadingSkeleton } from '@/app/profile/LoadingSkeleton';
 import { LogoutButton } from '@/app/profile/LogoutButton';
-import { UserNotLoggedIn } from '@/app/profile/UserNotLoggedIn';
 import { Card } from '@/components/Card';
+import { ForbiddenError } from '@/components/ForbiddenError';
 import { getSession } from '@/lib/session';
 import { findUser } from '@/lib/users';
-import { User } from '@/types/user';
+import { Users } from '@/types/users';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
 const Profile = async () => {
-    let user: User | null = null;
+    let user: Users | null = null;
     const currentSession = await getSession();
     const userId: string = currentSession?.userId as string;
     if (userId) {
@@ -17,7 +17,7 @@ const Profile = async () => {
     }
 
     if (!user) {
-        return <UserNotLoggedIn />;
+        return <ForbiddenError />;
     }
 
     return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { login } from '@/app/login/actions';
+import { login } from '@/actions/users';
 import { Button } from '@/components/Button';
 import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
@@ -9,9 +9,7 @@ import { startTransition, useActionState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const LoginForm = () => {
-    const [state, action, isPending] = useActionState(login, {
-        success: false,
-    });
+    const [state, action, isPending] = useActionState(login, {});
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -39,7 +37,6 @@ export const LoginForm = () => {
                 {...register('email', {
                     required: 'Email is required',
                 })}
-                defaultValue={state.payload?.savedFormData.email}
                 disabled={isPending}
                 error={clientErrors.email?.message as string}
                 placeholder="Email"

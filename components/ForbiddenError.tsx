@@ -1,10 +1,8 @@
 import React from 'react';
 
-type Props = {
-    text?: string;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-
-export const GeneralError = (props: Props) => {
+export const ForbiddenError = (
+    props: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+) => {
     return (
         <div
             {...{
@@ -12,7 +10,7 @@ export const GeneralError = (props: Props) => {
                 className: `bg-error-dark dark:bg-error-light p-12 rounded-md ${props.className}`,
             }}
         >
-            {props.text ?? 'There was an error, please refresh the page'}
+            You need to be logged in to access certain functionalities of this site
         </div>
     );
 };
