@@ -7,5 +7,5 @@ export const claimSchema = z.object({
 });
 
 export const messageSchema = z.object({
-    message: z.string().min(1, 'Message is required'),
+    content: z.string().min(1, 'Content is required'),
 });

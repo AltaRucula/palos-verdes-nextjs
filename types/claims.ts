@@ -1,15 +1,19 @@
 import { claimSchema } from '@/schemas/claims';
-import { Users } from '@/types/users';
 import { z } from 'zod';
 
-export type Claims = {
+export type Author = {
+    id: string;
+    firstName: string;
+};
+
+export type Claim = {
     id: string;
     createdAt: Date;
     content: string;
     messages: Message[];
     tags: string[];
     title: string;
-    author: Users;
+    author: Author;
     votes: Vote[];
 };
 
@@ -17,13 +21,12 @@ export type Message = {
     id: string;
     content: string;
     createdAt: Date;
-    author: Users;
+    author: Author;
 };
 
 export type Vote = {
     id: string;
-    createdAt: Date;
-    author: Users;
+    author: Partial<Author>;
 };
 
 export type NewClaim = {

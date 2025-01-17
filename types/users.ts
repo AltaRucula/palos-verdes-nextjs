@@ -8,7 +8,7 @@ export type NewUser = {
     password: string;
 };
 
-export type Users = {
+export type User = {
     id: string;
     createdAt: Date;
     email: string;

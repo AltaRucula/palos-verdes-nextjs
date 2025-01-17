@@ -1,10 +1,10 @@
 'use server';
 
-import { getErrors } from '@/actions/utils';
 import { PASSWORD_SALT_OR_ROUND } from '@/lib/env';
 import { createSession, deleteSession, getSession } from '@/lib/session';
 import * as users from '@/lib/users';
 import { createUser, findUser, findUserByEmail } from '@/lib/users';
+import { getErrors } from '@/lib/zod';
 import { loginSchema, passwordSchema, profileSchema, signupSchema } from '@/schemas/users';
 import { ActionState, TypedActionState } from '@/types/actionState';
 import bcrypt from 'bcrypt';

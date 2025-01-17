@@ -34,7 +34,7 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
         mode: 'onTouched',
         resolver: zodResolver(messageSchema),
     });
-    
+
     useEffect(() => {
         // After sending the message, wait to see if there are errors before erasing the message text area
         if (!isPending && !serverErrors) {
@@ -54,9 +54,9 @@ export const Messages: React.FC<Props> = ({ claimId, messages }) => {
                 ref={formRef}
             >
                 <TextArea
-                    {...register('message')}
+                    {...register('content')}
                     disabled={isPending}
-                    error={clientErrors.message?.message as string}
+                    error={clientErrors.content?.message as string}
                     placeholder="Type your message"
                 />
                 <Button

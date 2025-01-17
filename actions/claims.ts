@@ -1,9 +1,10 @@
 'use server';
 
-import { getClaimFormData, getErrors } from '@/actions/utils';
+import { getClaimFormData } from '@/actions/utils';
 import * as claims from '@/lib/claims';
 import { addVote } from '@/lib/claims';
 import { getSession } from '@/lib/session';
+import { getErrors } from '@/lib/zod';
 import { claimSchema, messageSchema } from '@/schemas/claims';
 import { ActionState, TypedActionState } from '@/types/actionState';
 import { Message } from '@/types/claims';
@@ -147,11 +148,11 @@ export const submitMessage = async (
         };
     }
 
-    const message = formData.get('message') as string;
+    const content = formData.get('content') as string;
 
     try {
         messageSchema.parse({
-            message,
+            content,
         });
     } catch (e) {
         return {
@@ -161,7 +162,7 @@ export const submitMessage = async (
     }
 
     const updatedClaim = await claims.addMessage(actionState.claimId, {
-        content: message,
+        content,
         author: currentSession?.userId as string,
     });
 

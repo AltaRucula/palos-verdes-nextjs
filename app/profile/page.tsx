@@ -4,12 +4,12 @@ import { Card } from '@/components/Card';
 import { ForbiddenError } from '@/components/ForbiddenError';
 import { getSession } from '@/lib/session';
 import { findUser } from '@/lib/users';
-import { Users } from '@/types/users';
+import { User } from '@/types/users';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
 const Profile = async () => {
-    let user: Users | null = null;
+    let user: User | null = null;
     const currentSession = await getSession();
     const userId: string = currentSession?.userId as string;
     if (userId) {

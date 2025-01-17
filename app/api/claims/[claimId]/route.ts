@@ -1,5 +1,6 @@
 import { deleteClaim, findClaim, updateClaim } from '@/lib/claims';
-import { Claims } from '@/types/claims';
+import { getErrors } from '@/lib/zod';
+import { claimSchema } from '@/schemas/claims';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Props = {
@@ -8,7 +9,7 @@ type Props = {
     }>;
 };
 
-export const GET = async (request: NextRequest, { params }: Props) => {
+export const GET = async ({}: NextRequest, { params }: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { claimId } = await params;
 
@@ -16,23 +17,45 @@ export const GET = async (request: NextRequest, { params }: Props) => {
     if (claim) {
         return NextResponse.json(claim);
     } else {
-        return NextResponse.json({ message: 'Error trying to get claim' });
+        return NextResponse.json(
+            { message: 'Error trying to get claim' },
+            {
+                status: 500,
+            }
+        );
     }
 };
 
-export const PUT = async ({ body }: NextRequest, { params }: Props) => {
+export const PUT = async ({ json }: NextRequest, { params }: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { claimId } = await params;
+    const modifiedClaim = await json();
 
-    const claim = await updateClaim(claimId, body as unknown as Partial<Claims>);
+    try {
+        claimSchema.parse(modifiedClaim);
+    } catch (e) {
+        return NextResponse.json(
+            { message: getErrors(e) },
+            {
+                status: 400,
+            }
+        );
+    }
+
+    const claim = await updateClaim(claimId, modifiedClaim);
     if (claim) {
         return NextResponse.json(claim);
     } else {
-        return NextResponse.json({ message: 'Error trying to get claim' });
+        return NextResponse.json(
+            { message: 'Error trying to edit claim' },
+            {
+                status: 500,
+            }
+        );
     }
 };
 
-export const DELETE = async (request: NextRequest, { params }: Props) => {
+export const DELETE = async ({}: NextRequest, { params }: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { claimId } = await params;
 
@@ -40,6 +63,11 @@ export const DELETE = async (request: NextRequest, { params }: Props) => {
     if (claim) {
         return NextResponse.json(claim);
     } else {
-        return NextResponse.json({ message: 'Error trying to get claim' });
+        return NextResponse.json(
+            { message: 'Error trying to delete claim' },
+            {
+                status: 500,
+            }
+        );
     }
 };

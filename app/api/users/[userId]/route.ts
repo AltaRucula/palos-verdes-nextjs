@@ -1,5 +1,5 @@
 import { findUser, updateUser } from '@/lib/users';
-import { Users } from '@/types/users';
+import { User } from '@/types/users';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Props = {
@@ -24,7 +24,7 @@ export const PUT = async ({ body }: NextRequest, { params }: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { userId } = await params;
 
-    const user = await updateUser(userId, body as unknown as Partial<Users>);
+    const user = await updateUser(userId, body as unknown as Partial<User>);
     if (user) {
         return NextResponse.json(user);
     } else {
