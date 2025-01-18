@@ -33,6 +33,11 @@ const decrypt = async (session: string) => {
 
 export const createSession = async (userId: string) => {
     const expires = new Date(Date.now() + COOKIE_DURATION);
+    return await encrypt({ userId, expires });
+};
+
+export const createCookieSession = async (userId: string) => {
+    const expires = new Date(Date.now() + COOKIE_DURATION);
     const session = await encrypt({ userId, expires });
 
     const cookieStore = await cookies();
@@ -45,7 +50,15 @@ export const createSession = async (userId: string) => {
     });
 };
 
-export const getSession = async () => {
+export const getSession = async (sessionToken: string) => {
+    const session = await decrypt(sessionToken);
+    if (!session?.userId) {
+        return null;
+    }
+    return session;
+};
+
+export const getCookieSession = async () => {
     const cookieStore = await cookies();
     const cookie = cookieStore.get(COOKIE_NAME)?.value;
     if (!cookie) {

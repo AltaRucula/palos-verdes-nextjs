@@ -1,6 +1,7 @@
 import { dbConnect } from '@/lib/mongoose';
 import { UserModel } from '@/models/user';
-import { NewUser, User } from '@/types/users';
+import { Signup } from '@/types/auth';
+import { User } from '@/types/users';
 
 export const findUser = async (id: string): Promise<User | null> => {
     try {
@@ -24,7 +25,7 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
     }
 };
 
-export const createUser = async (user: NewUser): Promise<User | null> => {
+export const createUser = async (user: Signup): Promise<User | null> => {
     try {
         await dbConnect();
         const newUser = new UserModel(user);

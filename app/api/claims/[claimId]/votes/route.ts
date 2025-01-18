@@ -1,4 +1,5 @@
-import { addVote } from '@/lib/claims';
+import { getUserIdFromAuthHeader } from '@/app/api/utils';
+import { addVote, hasAlreadyVoted } from '@/lib/claims';
 import { NewVote } from '@/types/claims';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,10 +9,22 @@ type Props = {
     }>;
 };
 
-export const POST = async ({}: NextRequest, { params }: Props) => {
+export const POST = async ({ headers }: NextRequest, { params }: Props) => {
     const { claimId } = await params;
+
+    const userId = await getUserIdFromAuthHeader(headers);
+
+    if (await hasAlreadyVoted(claimId, userId)) {
+        return NextResponse.json(
+            { message: 'You already voted for this claim' },
+            {
+                status: 400,
+            }
+        );
+    }
+
     const vote: NewVote = {
-        author: '67842ee973eb4f18cf2ebd12', // TODO get user id from cookie/session
+        author: userId,
     };
 
     const claim = await addVote(claimId, vote);

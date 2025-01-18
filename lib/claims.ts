@@ -105,6 +105,20 @@ export const findClaim = async (id: string): Promise<Claim | null> => {
     }
 };
 
+export const getClaimAuthor = async (id: string): Promise<string | null> => {
+    try {
+        await dbConnect();
+        const claim = await ClaimModel.findById<Claim>(id, 'author');
+        if (!claim) {
+            return null;
+        }
+        return claim.author?.id || null;
+    } catch (error) {
+        console.error('Error trying to get claim', error);
+        return null;
+    }
+};
+
 export const createClaim = async (claim: NewClaim): Promise<Claim | null> => {
     try {
         await dbConnect();
@@ -192,6 +206,31 @@ export const addVote = async (claimId: string, vote: NewVote): Promise<Claim | n
         );
     } catch (error) {
         console.error('Error trying to update claim', error);
+        return null;
+    }
+};
+
+export const hasAlreadyVoted = async (claimId: string, voteAuthorId: string): Promise<Claim | null> => {
+    try {
+        await dbConnect();
+        const claim = await ClaimModel.findOne<Claim>({
+            id: claimId,
+            votes: {
+                author: {
+                    id: voteAuthorId,
+                },
+            },
+        });
+
+        if (!claim) {
+            return null;
+        }
+
+        claim.messages.sort(sortMessagesByCreatedAt);
+
+        return translateDBEntity(claim);
+    } catch (error) {
+        console.error('Error trying to get claim', error);
         return null;
     }
 };

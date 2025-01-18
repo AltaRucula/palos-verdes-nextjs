@@ -2,7 +2,7 @@ import { LoadingSkeleton } from '@/app/profile/LoadingSkeleton';
 import { LogoutButton } from '@/app/profile/LogoutButton';
 import { Card } from '@/components/Card';
 import { ForbiddenError } from '@/components/ForbiddenError';
-import { getSession } from '@/lib/session';
+import { getCookieSession } from '@/lib/session';
 import { findUser } from '@/lib/users';
 import { User } from '@/types/users';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ import { Suspense } from 'react';
 
 const Profile = async () => {
     let user: User | null = null;
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
     const userId: string = currentSession?.userId as string;
     if (userId) {
         user = await findUser(userId);

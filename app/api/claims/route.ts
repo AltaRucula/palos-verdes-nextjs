@@ -1,3 +1,4 @@
+import { getUserIdFromAuthHeader } from '@/app/api/utils';
 import { createClaim, findClaims } from '@/lib/claims';
 import { getErrors } from '@/lib/zod';
 import { claimSchema } from '@/schemas/claims';
@@ -17,14 +18,12 @@ export const GET = async () => {
     }
 };
 
-export const POST = async ({ json }: NextRequest) => {
+export const POST = async ({ headers, json }: NextRequest) => {
     const newClaim = await json();
 
     try {
         claimSchema.parse(newClaim);
     } catch (e) {
-        console.log(e);
-
         return NextResponse.json(
             { message: getErrors(e) },
             {
@@ -33,9 +32,11 @@ export const POST = async ({ json }: NextRequest) => {
         );
     }
 
+    const userId = await getUserIdFromAuthHeader(headers);
+
     const claim = await createClaim({
         ...newClaim,
-        author: '67842ee973eb4f18cf2ebd12', // TODO get user id from cookie/session
+        author: userId,
     });
     if (claim) {
         return NextResponse.json(claim);

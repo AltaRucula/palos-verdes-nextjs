@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Tag } from '@/components/Tag';
 import { findClaim } from '@/lib/claims';
-import { getSession } from '@/lib/session';
+import { getCookieSession } from '@/lib/session';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -22,7 +22,7 @@ const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
         return notFound();
     }
 
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
     const currentSessionUserId = currentSession?.userId as string;
     const isClaimOwnedByUser = claim.author.id === currentSessionUserId;
     const isClaimAlreadyVotedByUser = claim.votes?.map((vote) => vote.author.id).includes(currentSessionUserId);

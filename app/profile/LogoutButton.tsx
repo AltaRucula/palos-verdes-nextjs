@@ -1,6 +1,6 @@
 'use client';
 
-import { logout } from '@/actions/users';
+import { logout } from '@/actions/auth';
 import { ButtonLink } from '@/components/ButtonLink';
 import { useActionState } from 'react';
 

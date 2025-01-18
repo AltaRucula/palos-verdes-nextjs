@@ -1,10 +1,10 @@
 'use client';
 
-import { signup } from '@/actions/users';
+import { signup } from '@/actions/auth';
 import { Button } from '@/components/Button';
 import { ErrorField } from '@/components/ErrorField';
 import { Input } from '@/components/Input';
-import { signupSchema } from '@/schemas/users';
+import { signupSchema } from '@/schemas/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { startTransition, useActionState, useRef } from 'react';

@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button';
-import DarkMode from '@/components/DarkMode';
-import { getSession } from '@/lib/session';
+import ChangeThemeButton from '@/components/ChangeThemeButton';
+import { getCookieSession } from '@/lib/session';
 import Link from 'next/link';
 import React from 'react';
 
@@ -23,7 +23,7 @@ const linksForUserWithSession: Link[] = [
 ];
 
 export const Navbar: React.FC = async () => {
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
 
     const getLinks = (): Link[] => {
         if (currentSession) {
@@ -43,7 +43,7 @@ export const Navbar: React.FC = async () => {
                     <Button>{label}</Button>
                 </Link>
             ))}
-            <DarkMode />
+            <ChangeThemeButton />
         </div>
     );
 };

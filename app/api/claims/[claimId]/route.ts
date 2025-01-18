@@ -1,4 +1,5 @@
-import { deleteClaim, findClaim, updateClaim } from '@/lib/claims';
+import { getUserIdFromAuthHeader } from '@/app/api/utils';
+import { deleteClaim, findClaim, getClaimAuthor, updateClaim } from '@/lib/claims';
 import { getErrors } from '@/lib/zod';
 import { claimSchema } from '@/schemas/claims';
 import { NextRequest, NextResponse } from 'next/server';
@@ -9,13 +10,25 @@ type Props = {
     }>;
 };
 
-export const GET = async ({}: NextRequest, { params }: Props) => {
+export const GET = async ({ headers }: NextRequest, { params }: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { claimId } = await params;
 
     const claim = await findClaim(claimId);
     if (claim) {
-        return NextResponse.json(claim);
+        const userId = await getUserIdFromAuthHeader(headers);
+
+        // Get if the user is claim author
+        const isAuthor = claim.author.id === userId;
+
+        // Get if the user already voted for this claim
+        const hasVoted = claim.votes.some((vote) => vote.author.id === userId);
+
+        return NextResponse.json({
+            ...claim,
+            isAuthor,
+            hasVoted,
+        });
     } else {
         return NextResponse.json(
             { message: 'Error trying to get claim' },
@@ -26,7 +39,7 @@ export const GET = async ({}: NextRequest, { params }: Props) => {
     }
 };
 
-export const PUT = async ({ json }: NextRequest, { params }: Props) => {
+export const PUT = async ({ headers, json }: NextRequest, { params }: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { claimId } = await params;
     const modifiedClaim = await json();
@@ -38,6 +51,18 @@ export const PUT = async ({ json }: NextRequest, { params }: Props) => {
             { message: getErrors(e) },
             {
                 status: 400,
+            }
+        );
+    }
+
+    const userId = await getUserIdFromAuthHeader(headers);
+    const claimAuthor = await getClaimAuthor(claimId);
+
+    if (claimAuthor !== userId) {
+        return NextResponse.json(
+            { message: 'You are not the author of this claim' },
+            {
+                status: 401,
             }
         );
     }
@@ -55,9 +80,21 @@ export const PUT = async ({ json }: NextRequest, { params }: Props) => {
     }
 };
 
-export const DELETE = async ({}: NextRequest, { params }: Props) => {
+export const DELETE = async ({ headers }: NextRequest, { params }: Props) => {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { claimId } = await params;
+
+    const userId = await getUserIdFromAuthHeader(headers);
+    const claimAuthor = await getClaimAuthor(claimId);
+
+    if (claimAuthor !== userId) {
+        return NextResponse.json(
+            { message: 'You are not the author of this claim' },
+            {
+                status: 401,
+            }
+        );
+    }
 
     const claim = await deleteClaim(claimId);
     if (claim) {

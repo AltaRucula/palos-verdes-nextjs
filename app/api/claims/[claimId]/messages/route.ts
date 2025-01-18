@@ -1,3 +1,4 @@
+import { getUserIdFromAuthHeader } from '@/app/api/utils';
 import { addMessage } from '@/lib/claims';
 import { getErrors } from '@/lib/zod';
 import { messageSchema } from '@/schemas/claims';
@@ -9,7 +10,7 @@ type Props = {
     }>;
 };
 
-export const POST = async ({ json }: NextRequest, { params }: Props) => {
+export const POST = async ({ headers, json }: NextRequest, { params }: Props) => {
     const { claimId } = await params;
     const newMessage = await json();
 
@@ -24,9 +25,11 @@ export const POST = async ({ json }: NextRequest, { params }: Props) => {
         );
     }
 
+    const userId = await getUserIdFromAuthHeader(headers);
+
     const claim = await addMessage(claimId, {
         ...newMessage,
-        author: '67842ee973eb4f18cf2ebd12', // TODO get user id from cookie/session
+        author: userId,
     });
 
     if (claim) {

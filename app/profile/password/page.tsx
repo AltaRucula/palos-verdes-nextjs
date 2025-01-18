@@ -1,10 +1,10 @@
 import { ChangePasswordForm } from '@/app/profile/password/ChangePasswordForm';
 import { ForbiddenError } from '@/components/ForbiddenError';
-import { getSession } from '@/lib/session';
+import { getCookieSession } from '@/lib/session';
 import React from 'react';
 
 const Page: React.FC = async () => {
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
     const userId: string = currentSession?.userId as string;
 
     if (!userId) {

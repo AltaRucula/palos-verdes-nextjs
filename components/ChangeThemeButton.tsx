@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-const DarkMode = () => {
+const ChangeThemeButton = () => {
     const [isDarkTheme, setIsDarkTheme] = useState(
         localStorage?.theme === 'dark' ||
             (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -27,4 +27,4 @@ const DarkMode = () => {
         </Button>
     );
 };
-export default DarkMode;
+export default ChangeThemeButton;

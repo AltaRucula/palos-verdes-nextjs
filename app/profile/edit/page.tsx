@@ -1,13 +1,13 @@
 import { EditForm } from '@/app/profile/edit/EditForm';
 import { LoadingSkeleton } from '@/app/profile/edit/LoadingSkeleton';
 import { ForbiddenError } from '@/components/ForbiddenError';
-import { getSession } from '@/lib/session';
+import { getCookieSession } from '@/lib/session';
 import { findUser } from '@/lib/users';
 import React, { Suspense } from 'react';
 
 const User: React.FC = async () => {
     let user;
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
     const userId: string = currentSession?.userId as string;
     if (userId) {
         user = await findUser(userId);

@@ -2,7 +2,7 @@ import { Edit } from '@/app/claims/[claimId]/edit/Edit';
 import { LoadingSkeleton } from '@/app/claims/[claimId]/edit/LoadingSkeleton';
 import { ForbiddenError } from '@/components/ForbiddenError';
 import { findClaim } from '@/lib/claims';
-import { getSession } from '@/lib/session';
+import { getCookieSession } from '@/lib/session';
 import React, { Suspense } from 'react';
 
 type ClaimProps = {
@@ -15,7 +15,7 @@ const Claim: React.FC<ClaimProps> = async ({ claimId }) => {
         return <ForbiddenError />;
     }
 
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
     const currentSessionUserId = currentSession?.userId as string;
     const isClaimOwnedByUser = claim.author.id === currentSessionUserId;
 

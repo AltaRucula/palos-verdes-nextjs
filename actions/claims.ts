@@ -3,7 +3,7 @@
 import { getClaimFormData } from '@/actions/utils';
 import * as claims from '@/lib/claims';
 import { addVote } from '@/lib/claims';
-import { getSession } from '@/lib/session';
+import { getCookieSession } from '@/lib/session';
 import { getErrors } from '@/lib/zod';
 import { claimSchema, messageSchema } from '@/schemas/claims';
 import { ActionState, TypedActionState } from '@/types/actionState';
@@ -26,7 +26,7 @@ type SubmitMessageStatePayload = {
 };
 
 export const createClaim = async (actionState: ActionState, formData: FormData): Promise<ActionState> => {
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
 
     if (!currentSession) {
         return {
@@ -65,7 +65,7 @@ export const editClaim = async (
     actionState: TypedActionState<EditClaimPayload>,
     formData: FormData
 ): Promise<TypedActionState<EditClaimPayload>> => {
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
 
     if (!currentSession) {
         return {
@@ -107,7 +107,7 @@ export const editClaim = async (
 export const deleteClaim = async (
     actionState: TypedActionState<DeleteClaimStatePayload>
 ): Promise<TypedActionState<DeleteClaimStatePayload>> => {
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
 
     if (!currentSession) {
         return {
@@ -139,7 +139,7 @@ export const submitMessage = async (
     actionState: TypedActionState<SubmitMessageStatePayload>,
     formData: FormData
 ): Promise<TypedActionState<SubmitMessageStatePayload>> => {
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
 
     if (!currentSession) {
         return {
@@ -187,7 +187,7 @@ type VoteClaimPayload = {
 export const voteClaim = async (
     actionState: TypedActionState<VoteClaimPayload>
 ): Promise<TypedActionState<VoteClaimPayload>> => {
-    const currentSession = await getSession();
+    const currentSession = await getCookieSession();
 
     if (!currentSession) {
         return {
